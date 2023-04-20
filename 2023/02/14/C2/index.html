@@ -1,0 +1,560 @@
+
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="utf-8" />
+        <title>C语言入门(2) | 小林的博客</title>
+        <meta name="author" content="林  子" />
+        <meta name="description" content="烟雨江南中为等你回波一望" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="/images/favicon.png" />
+        <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.3.0/css/all.min.css" />
+<link rel="stylesheet" href="/css/fonts.min.css" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.7.0/highlight.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.7.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="layout">
+            <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+            </transition>
+            <nav id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <div class="desktop-menu">
+        <a class="title" href="/">
+            <span>小林的博客</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </div>
+    <div id="mobile-menu">
+        <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
+        <div class="title" @click="shouMenuItems = !shouMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;小林的博客</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="shouMenuItems">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+
+            <transition name="into">
+            <div id="main" v-show="!loading">
+                <div class="article">
+    <div>
+        <h1>C语言入门(2)</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/14
+        </span>
+        
+        <span class="category">
+            <a href="/categories/C%E8%AF%AD%E8%A8%80/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                C语言
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="color: #ffa2c4">字符串</a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/" style="color: #03a9f4">分支语句</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+
+
+<h1 id="字符串、转义字符"><a href="#字符串、转义字符" class="headerlink" title="字符串、转义字符"></a>字符串、转义字符</h1><blockquote>
+<p> <code>&quot;abcdefg&quot;</code>  这种由双引号（Double Quote）引起来的一串字符称为字符串字面（String Literal），或者简<font color="#ed83ab" size=3 face="黑体" >称字符串</font>。<font color="#ed83ab" size=3 face="黑体" >字符串的结束标志是一个 \0 的转义字符。在计算字符串长度的时候 \0 是结束标志，不算作字符串内容。 </font></p>
+</blockquote>
+<h2 id="字符串定义"><a href="#字符串定义" class="headerlink" title="字符串定义"></a>字符串定义</h2><p><code>&quot;char a[] = &quot;abcde&quot;</code> 这种方法，末尾会自动追加\0<br> <code>&quot;char a[] = &#123;&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;\0&#39;&#125;</code> 这种方法，需要手动追加\0，否则字符串会没有结束标志。<br> <code>&quot;char a[20] = &#123;&#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;&#125;</code> 这种方法，定义了长度为20，那么后面长度不足部分会自动补\0，所以也是可以的。</p>
+<p>接下来我们试一下</p>
+<pre><code class="c">
+#include&lt;stdio.h&gt;
+
+
+int main()
+&#123;
+    char a[] = &quot;abcde&quot;;
+    char b[] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;\0&#39; &#125;;
+    char c[20] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39; &#125;;
+
+    printf(&quot;a = %s\n&quot;, a);
+    printf(&quot;b = %s\n&quot;, b);
+    printf(&quot;c = %s\n&quot;, c);
+
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947526.png" alt="在这里插入图片描述"></p>
+<p>这些都是可以的，但是如果在没有限制的长度的情况下，b是一定要加\0的，否则字符串没有结束标志，会非法访问后面的内容。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947535.png" alt="在这里插入图片描述"><br>字符串没有结束标志，就会访问随即内容。</p>
+<h2 id="字符串长度"><a href="#字符串长度" class="headerlink" title="字符串长度"></a>字符串长度</h2><blockquote>
+<p><font color="#ed83ab" size=4 face="黑体" >字符串长度是从第一个字符开始，到\0停止，不包括\0。</font></p>
+</blockquote>
+<pre><code class="c">    char a[] = &quot;abcde&quot;; //从a开始，到e后一个\0结束，长度5
+    char b[] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;\0&#39;&#125;;//从a开始，到\0结束，不包括\0，长度5
+    char c[20] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39; &#125;;//一样，长度5
+</code></pre>
+<p>有一个strlen函数，可以获取一个字符串的长度，我们只需要引入string.h库，即可使用。</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+#include&lt;string.h&gt;
+
+int main()
+&#123;
+    char a[] = &quot;abcde&quot;;
+    char b[] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;,&#39;\0&#39;&#125;;
+    char c[20] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39; &#125;;
+
+    printf(&quot;lena = %d\n&quot;, strlen(a));
+    printf(&quot;lenb = %d\n&quot;, strlen(b));
+    printf(&quot;lenc = %d\n&quot;, strlen(c));
+
+
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947870.png" alt="在这里插入图片描述"><br>我们发现长度都是5，因为后面都有\0作为结束标志，但如果我们把b的\0去掉，那么 b的长度就变成了随机值。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948506.png" alt="在这里插入图片描述"><br>所以字符串的长度是从第一个字符开始，到\0结束，其中不包括\0。</p>
+<h2 id="字符串大小"><a href="#字符串大小" class="headerlink" title="字符串大小"></a>字符串大小</h2><blockquote>
+<p><font color="#ed83ab" size=4 face="黑体" >字符串的大小就是它开辟了多少空间，那么大小就是多少。如果定义时没有明确数组开辟多少空间，那么按数组元素个数计算大小。</font></p>
+</blockquote>
+<pre><code class="c">    char a[] = &quot;abcde&quot;; //包括\0 ， 6个字节
+    char b[] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39;&#125;; //5个字节，元素个数
+    char c[20] = &#123; &#39;a&#39;,&#39;b&#39;,&#39;c&#39;,&#39;d&#39;,&#39;e&#39; &#125;;//有明确开辟20个空间大小，20字节
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947486.png" alt="在这里插入图片描述"><br>sizeof是一个关键字，会返回变量占用空间的大小。</p>
+<h2 id="转义字符"><a href="#转义字符" class="headerlink" title="转义字符"></a>转义字符</h2><table>
+<thead>
+<tr>
+<th>转义字符</th>
+<th>释义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>\?(不常用)</td>
+<td>在书写连续多个问号时使用，防止他们被解析成三字母词</td>
+</tr>
+<tr>
+<td>\‘</td>
+<td>用于表示字符常量’</td>
+</tr>
+<tr>
+<td>\“</td>
+<td>用于表示一个字符内部的双引号</td>
+</tr>
+<tr>
+<td>\\</td>
+<td>用于表示一个反斜杠，防止它被解释为一个转义序列符</td>
+</tr>
+<tr>
+<td>\a</td>
+<td>警告字符，蜂鸣</td>
+</tr>
+<tr>
+<td>\b</td>
+<td>退格字符</td>
+</tr>
+<tr>
+<td>\f</td>
+<td>进纸符</td>
+</tr>
+<tr>
+<td>\n</td>
+<td>换行符</td>
+</tr>
+<tr>
+<td>\r</td>
+<td>回车</td>
+</tr>
+<tr>
+<td>\t</td>
+<td>水平制表符</td>
+</tr>
+<tr>
+<td>\v</td>
+<td>垂直制表符</td>
+</tr>
+<tr>
+<td>\ddd</td>
+<td>ddd表示1~3个八进制的数字。 如： \130 X</td>
+</tr>
+<tr>
+<td>\xdd</td>
+<td>dd表示2个十六进制数字。 如： \x30 0</td>
+</tr>
+</tbody></table>
+<p>接下来演示几个转义字符。</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    printf(&quot;ABCD\b\n&quot;); //退格+回车，输出ABC换行
+    printf(&quot;ABCD\\\n &quot;);// \加换行，输出ABCD\换行
+    printf(&quot;%d\n&quot;,&#39;\010&#39;); //表示8进制的123，输出8回车
+    printf(&quot;%d\n&quot;, &#39;\x10&#39;);//16进制的ff，16回车
+
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947970.png" alt="在这里插入图片描述"></p>
+<p><font color="#ed83ab" size=4 face="黑体" >注意！所有的转义字符，它都只占一个字节。因为转义字符归根结底还是字符！字符占1个字节。</font></p>
+<h1 id="选择语句"><a href="#选择语句" class="headerlink" title="选择语句"></a>选择语句</h1><blockquote>
+<p><font color="#ed83ab" size=4 face="黑体" >人无时无刻都在做选择，程序也需要做选择。当我们期望程序达到某个条件时，就做出不同的选择时。我们就需要选择语句，来控制程序走哪条路。</font></p>
+</blockquote>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947347.png" alt="在这里插入图片描述"></p>
+<h2 id="if单分支"><a href="#if单分支" class="headerlink" title="if单分支"></a>if单分支</h2><blockquote>
+<p><font color="#ed83ab" size=4 face="黑体" >简单来说，单分支就是你要不要选择这条路。最终的终点是一样的，但中间会不会有小插曲，取决于你的选择。</font></p>
+</blockquote>
+<p>假如你现在放学了，你可以直接回家。但你也可以选择先去网吧，再回家，而去网吧的这个过程就是你中间的选择。</p>
+<p>但是你要去网吧，必须要有个条件，当满足了什么条件时，你才会选择去网吧。如果此时你身上有超过五块钱时，先去网吧，再回家。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947883.png" alt="在这里插入图片描述"><br>所以我们可以用程序来模拟上面的过程。</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int money = 6; //你身上的钱
+    
+    if (money &gt; 5) //如果你身上的钱超过5块
+    &#123;
+        //去网吧
+        printf(&quot;去网吧-&gt;&quot;);
+    &#125;
+
+    //不管如何，你都要回家
+    printf(&quot;回家&quot;);
+    return 0;
+&#125;
+</code></pre>
+<p>此时我有6块钱，所以可以去网吧。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947503.png" alt="在这里插入图片描述"><br>但如果我们把 money改成小于5呢？ 钱不够了，那就不能去网吧了。只能直接回家了。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948395.png" alt="在这里插入图片描述"></p>
+<h2 id="if双分支"><a href="#if双分支" class="headerlink" title="if双分支"></a>if双分支</h2><p>那么这时候问题来了，你钱不够，去不了网吧。又不想马上回家，必须要买点东西弥补一下去不了网吧的遗憾。这时就可以用双分支。</p>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947059.png" alt="在这里插入图片描述"><br>因为你不想立刻回家，必须做点事情才回家，那么就没有直接回家这条选项了。</p>
+<p>用程序模拟</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int money = 4; //你身上的钱
+    
+    if (money &gt; 5) //如果你身上的钱超过5块
+    &#123;
+        //去网吧
+        printf(&quot;去网吧-&gt;&quot;);
+    &#125;
+    else //钱不够，就跳到这来
+    &#123;
+        printf(&quot;去买棒棒糖-&gt;&quot;);
+    &#125;
+
+    //不管如何，你都要回家
+    printf(&quot;回家&quot;);
+    return 0;
+&#125;
+</code></pre>
+<p>当你只有4块钱时<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231947317.png" alt="在这里插入图片描述"><br>当你有6块钱时<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948451.png" alt="在这里插入图片描述"></p>
+<h2 id="if多分支"><a href="#if多分支" class="headerlink" title="if多分支"></a>if多分支</h2><p>那么这时候你又有要求了。 如果身上的钱超过20块，就去游泳，如果不超过20块钱，但是超过10块钱，就去吃肯德基。如果不超过10块钱，但是超过5块钱，就去网吧。五块钱都没有，那就只能吃棒棒糖了。最后再回家。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948200.png" alt="在这里插入图片描述"><br>那么我们就else if</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int money = 6; //你身上的钱
+    
+    if (money &gt; 20) //如果你身上的钱超过20块
+    &#123;
+        //去游泳
+        printf(&quot;去游泳-&gt;&quot;);
+    &#125;
+    else if(money &gt; 10)//钱不够20,但是超过10块
+    &#123;
+        printf(&quot;去吃肯德基-&gt;&quot;);
+    &#125;
+    else if (money &gt; 5)//钱不够10块,但是超过5块
+    &#123;
+        printf(&quot;去网吧-&gt;&quot;);
+    &#125;
+    else 
+    &#123;
+        printf(&quot;去买棒棒糖-&gt;&quot;); //五块钱都没有
+    &#125;
+
+    //不管如何，你都要回家
+    printf(&quot;回家&quot;);
+    return 0;
+&#125;
+</code></pre>
+<p>21块钱的结果<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948748.png" alt="在这里插入图片描述"></p>
+<p>11块钱的结果<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948398.png" alt="在这里插入图片描述"></p>
+<p>6块钱的结果<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948181.png" alt="在这里插入图片描述"></p>
+<p>4块钱的结果<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948855.png" alt="在这里插入图片描述"></p>
+<h2 id="switch分支"><a href="#switch分支" class="headerlink" title="switch分支"></a>switch分支</h2><blockquote>
+<p><font color="#ed83ab" size=4 face="黑体" > switch 分支也是多分支，跟 if else的功能是一样的。只不过在某种特定情况，用switch分支会比 if else分支更加直观，更加方便。</font></p>
+</blockquote>
+<p>假设 你想制定一个计划表，从周一到周日。每一天都做不同的事情。这种情况用 if else会显得很杂乱，代码可读性并不是很好。</p>
+<p>if else的写法</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int weekday = 1; //星期数
+
+    if (weekday == 1)
+    &#123;
+        printf(&quot;跑步&quot;);
+    &#125;
+    else if (weekday == 2)
+    &#123;
+        printf(&quot;爬山&quot;);
+    &#125;
+    else if (weekday == 3)
+    &#123;
+        printf(&quot;游泳&quot;);
+    &#125;
+    else if (weekday == 4)
+    &#123;
+        printf(&quot;打游戏&quot;);
+    &#125;
+    else if (weekday == 5)
+    &#123;
+        printf(&quot;打篮球&quot;);
+    &#125;
+    else if (weekday == 6)
+    &#123;
+        printf(&quot;踢足球&quot;);
+    &#125;
+    else if (weekday == 7)
+    &#123;
+        printf(&quot;写作业&quot;);
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<p>这种频繁的 if else ，看的让人眼花缭乱。 所以在这里推荐用switch分支！！</p>
+<p>switch分支的写法</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int weekday = 1; //星期数
+
+    switch (weekday)//weekday是要匹配的值
+    &#123;
+        //如果weekday = 1，那么会走这条语句的内容
+    case 1: printf(&quot;跑步&quot;); 
+        break;
+
+        //如果weekday = 2，那么会走这条语句的内容
+    case 2: printf(&quot;爬山&quot;);
+        break;
+
+        //如果weekday = 3，那么会走这条语句的内容
+    case 3: printf(&quot;游泳&quot;);
+        break;
+
+        //如果weekday = 4，那么会走这条语句的内容
+    case 4: printf(&quot;打游戏&quot;);
+        break;
+
+        //如果weekday = 5，那么会走这条语句的内容
+    case 5: printf(&quot;打篮球&quot;);
+        break;
+
+        //如果weekday = 6，那么会走这条语句的内容
+    case 6: printf(&quot;踢足球&quot;);
+        break;
+
+        //如果weekday = 7，那么会走这条语句的内容
+    case 7: printf(&quot;写作业&quot;);
+        break;
+
+        //如果上面都不满足，那么会执行这一条
+    default:
+        printf(&quot;星期数不存在&quot;);
+        break;
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948602.png" alt="在这里插入图片描述"></p>
+<p><font color="#ed83ab" size=4 face="黑体" >注意！每条case分支必须要加上break语句，否则会接着执行下一条语句。假设我把case1，和case2的break删掉。</font><br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231948931.png" alt="在这里插入图片描述"><br>我们会发现它会接着往下执行，直到遇到break才结束。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+                <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2023 - 2023 小林的博客
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;林  子
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+            </div>
+            </transition>
+            
+            <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+            </transition>
+            
+        </div>
+        <script src="/js/main.js"></script>
+        
+        
+
+
+
+
+        
+   
+   <canvas
+    id="fireworks"  style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+    ></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.min.js"></script> 
+    
+    <canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+    ></canvas>
+    <script src="/js/background.min.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css" />
+    <script src="/js/cursor.min.js"></script>
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
