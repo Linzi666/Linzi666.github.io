@@ -34,6 +34,8 @@
 
 
 
+<script src="https://cdn.staticfile.org/twikoo/1.6.10/twikoo.all.min.js"></script>
+
 
 
 <link rel="stylesheet" href="/css/main.css" />
@@ -101,6 +103,11 @@
             <span>&ensp;Tags</span>
         </a>
         
+        <a href="/books">
+            <i class="fa-solid fa- fa-fw"></i>
+            <span>&ensp;Books</span>
+        </a>
+        
     </div>
     <div id="mobile-menu">
         <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
@@ -156,6 +163,15 @@
                 </div>
             </a>
             
+            <a href="/books">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa- fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Books</div>
+                </div>
+            </a>
+            
         </div>
         </transition>
     </div>
@@ -192,7 +208,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/%E5%87%BD%E6%95%B0/" style="color: #00bcd4">函数</a>
+                <a href="/tags/%E5%87%BD%E6%95%B0/" style="color: #ff7d73">函数</a>
             </span>
             
         </span>
@@ -495,6 +511,10 @@ int main()
     
     
     
+    <div id="comment">
+        <div id="twikoo-container"></div>
+    </div>
+    
     
 </div>
 
@@ -531,6 +551,16 @@ int main()
         
 
 
+
+<script>
+    twikoo.init({
+        el: "#twikoo-container",
+        envId: "",
+        region: "",
+        path: location.pathname,
+        lang: "zh-CN",
+    })
+</script>
 
 
         

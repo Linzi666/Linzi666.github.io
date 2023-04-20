@@ -30,6 +30,8 @@
 
 
 
+<script src="/js/lib/search.js"></script>
+
 
 
 <link rel="stylesheet" href="/css/main.css" />
@@ -97,6 +99,11 @@
             <span>&ensp;Tags</span>
         </a>
         
+        <a href="/books">
+            <i class="fa-solid fa- fa-fw"></i>
+            <span>&ensp;Books</span>
+        </a>
+        
     </div>
     <div id="mobile-menu">
         <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
@@ -152,6 +159,15 @@
                 </div>
             </a>
             
+            <a href="/books">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa- fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Books</div>
+                </div>
+            </a>
+            
         </div>
         </transition>
     </div>
@@ -161,6 +177,8 @@
             <div id="main" v-show="!loading">
                 
 <div id="archives">
+    
+    <input id="search-bar" class="input" placeholder="搜索" v-model="rawSearch" />
     
     <div id="timeline-wrap" ref="timeline">
         
@@ -190,7 +208,7 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" style="color: #ff7d73">数据类型</a>
+                            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" style="color: #00a596">数据类型</a>
                         </span>
                         
                         <span class="tag">
@@ -230,7 +248,7 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="color: #03a9f4">字符串</a>
+                            <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="color: #ff7d73">字符串</a>
                         </span>
                         
                         <span class="tag">
@@ -270,7 +288,7 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E5%BE%AA%E7%8E%AF/" style="color: #03a9f4">循环</a>
+                            <a href="/tags/%E5%BE%AA%E7%8E%AF/" style="color: #00bcd4">循环</a>
                         </span>
                         
                     </span>
@@ -305,7 +323,7 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E5%87%BD%E6%95%B0/" style="color: #03a9f4">函数</a>
+                            <a href="/tags/%E5%87%BD%E6%95%B0/" style="color: #ffa2c4">函数</a>
                         </span>
                         
                     </span>
@@ -340,7 +358,7 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #00bcd4">二叉树</a>
+                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #03a9f4">二叉树</a>
                         </span>
                         
                         <span class="tag">
@@ -380,17 +398,17 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #03a9f4">二叉树</a>
+                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #ff7d73">二叉树</a>
                         </span>
                         
                         <span class="tag">
                             
-                            <a href="/tags/leetcode/" style="color: #03a9f4">leetcode</a>
+                            <a href="/tags/leetcode/" style="color: #ff7d73">leetcode</a>
                         </span>
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #ffa2c4">递归</a>
+                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #00a596">递归</a>
                         </span>
                         
                     </span>
@@ -425,17 +443,17 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #ffa2c4">二叉树</a>
+                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #00bcd4">二叉树</a>
                         </span>
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #ffa2c4">递归</a>
+                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #ff7d73">递归</a>
                         </span>
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E9%93%BE%E8%A1%A8/" style="color: #03a9f4">链表</a>
+                            <a href="/tags/%E9%93%BE%E8%A1%A8/" style="color: #00a596">链表</a>
                         </span>
                         
                     </span>
@@ -470,7 +488,7 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #ffa2c4">二叉树</a>
+                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #03a9f4">二叉树</a>
                         </span>
                         
                         <span class="tag">
@@ -480,7 +498,7 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #00bcd4">递归</a>
+                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #ffa2c4">递归</a>
                         </span>
                         
                     </span>
@@ -515,17 +533,17 @@
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #03a9f4">二叉树</a>
+                            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #ffa2c4">二叉树</a>
                         </span>
                         
                         <span class="tag">
                             
-                            <a href="/tags/leetcode/" style="color: #03a9f4">leetcode</a>
+                            <a href="/tags/leetcode/" style="color: #00bcd4">leetcode</a>
                         </span>
                         
                         <span class="tag">
                             
-                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #ff7d73">递归</a>
+                            <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #ffa2c4">递归</a>
                         </span>
                         
                     </span>
