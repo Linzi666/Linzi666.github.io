@@ -1,0 +1,532 @@
+
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="utf-8" />
+        <title>C语言函数 | 小林的博客</title>
+        <meta name="author" content="林  子" />
+        <meta name="description" content="烟雨江南中为等你回波一望" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="/images/favicon.png" />
+        <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.3.0/css/all.min.css" />
+<link rel="stylesheet" href="/css/fonts.min.css" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.7.0/highlight.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.7.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+
+
+        <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.min.js"></script>
+    <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.min.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+
+
+
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="layout">
+            <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+            </transition>
+            <nav id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <div class="desktop-menu">
+        <a class="title" href="/">
+            <span>小林的博客</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </div>
+    <div id="mobile-menu">
+        <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
+        <div class="title" @click="shouMenuItems = !shouMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;小林的博客</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="shouMenuItems">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+
+            <transition name="into">
+            <div id="main" v-show="!loading">
+                <div class="article">
+    <div>
+        <h1>C语言函数</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/15
+        </span>
+        
+        <span class="category">
+            <a href="/categories/C%E8%AF%AD%E8%A8%80/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                C语言
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%87%BD%E6%95%B0/" style="color: #ffa2c4">函数</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+<h1 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h1><blockquote>
+<p>函数有2类，一类是库函数，一类是自定义函数，库函数就是C语言为我们提供的。例如我们常用的 printf()，scanf()，这些都是C语言为我们提供的库函数。自定义函数则是我们自己定义的函数，自己定义，自己调用。</p>
+</blockquote>
+<h2 id="函数的声明和定义"><a href="#函数的声明和定义" class="headerlink" title="函数的声明和定义"></a>函数的声明和定义</h2><h3 id="函数的声明"><a href="#函数的声明" class="headerlink" title="函数的声明"></a>函数的声明</h3><p>函数的声明定义格式为: 返回值类型 函数名(参数列表);<br>返回值类型：就是数据类型，如果没有返回值类型则用void。<br>函数名：随意，但在C语言中，函数名不能重复。<br>参数列表：就是传给函数的数据。</p>
+<p>以下是函数声明的例子：</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//一个无返回值，无参数的函数声明
+void a();
+
+//一个无返回值，有1个int参数的函数声明
+void b(int a);
+
+//有1个int类型参数和1个double类型参数 ，且有返回值为int类型的函数
+int c(int a,double d);
+
+int main()
+&#123;
+    return 0;
+&#125;
+</code></pre>
+<p>函数的声明一般会放在.h的头文件中。</p>
+<h3 id="函数的定义"><a href="#函数的定义" class="headerlink" title="函数的定义"></a>函数的定义</h3><p>函数声明之后，我们需要定义。定义的话就直接把声明函数展开。<br>函数的定义格式为: 返回值类型 函数名(参数列表) { 函数体;}</p>
+<p>函数定义如下：</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//一个无返回值，无参数的函数声明
+void a();
+
+//一个无返回值，有1个int参数的函数声明
+void b(int a);
+
+//有1个int类型参数和1个double类型参数 ，且有返回值为int类型的函数
+int c(int a,double d);
+
+//函数a的定义
+void a()
+&#123;
+    printf(&quot;a&quot;);
+&#125;
+
+//函数b的定义
+void b(int a)
+&#123;
+    printf(&quot;b&quot;);
+&#125;
+
+//函数c的定义
+int c(int a, double d)
+&#123;
+    printf(&quot;c&quot;);
+    //有返回值必须返回一个值
+    return 0;
+&#125;
+
+int main()
+&#123;
+    return 0;
+&#125;
+</code></pre>
+<p>当然，函数在定义的时候，如果未声明，会自动声明。<br>所以也可以这样:</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//函数a的定义，前面未声明在此处自动声明
+void a()
+&#123;
+    printf(&quot;a&quot;);
+&#125;
+
+//函数b的定义，前面未声明在此处自动声明
+void b(int a)
+&#123;
+    printf(&quot;b&quot;);
+&#125;
+
+//函数c的定义，前面未声明在此处自动声明
+int c(int a, double d)
+&#123;
+    printf(&quot;c&quot;);
+    //有返回值必须返回一个值
+    return 0;
+&#125;
+
+int main()
+&#123;
+    return 0;
+&#125;
+</code></pre>
+<p>那么问题来了，既然定义时候会自动声明，那为什么还要声明呢？这是因为文件扫描是从上往下的，如果发现调用了一个函数，可函数在下面实现。那么就无法识别到这个函数。<br>例如：</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//函数a的定义
+void a()
+&#123;
+    printf(&quot;a&quot;);
+&#125;
+
+int main()
+&#123;
+    
+    a();//调用函数a
+
+    return 0;
+&#125;
+</code></pre>
+<p>这个代码因为定义在main函数的前面，所以可以调用。但是如果定义在main函数的下面，那么main函数调用a函数时，无法识别到a，就会出错。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+int main()
+&#123;
+    
+    a();//调用函数a
+
+    return 0;
+&#125;
+
+//函数a的定义
+void a()
+&#123;
+    printf(&quot;a&quot;);
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952631.png" alt="在这里插入图片描述"><br>所以这时候加上声明，就可以正常运行了。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952896.png" alt="在这里插入图片描述"></p>
+<h2 id="函数的调用和传参"><a href="#函数的调用和传参" class="headerlink" title="函数的调用和传参"></a>函数的调用和传参</h2><h3 id="函数的调用"><a href="#函数的调用" class="headerlink" title="函数的调用"></a>函数的调用</h3><p>函数的调用很简单，上面就有演示。<br><font color="red"> 函数的调用格式： 函数名(参数列表); </font><br>参数列表要和函数定义时的参数列表匹配<br>函数调用的例子:</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//函数 a没有参数
+void a()
+&#123;
+    printf(&quot;a&quot;);
+&#125;
+//函数 b有1个int参数
+void b(int b)
+&#123;
+    printf(&quot;b&quot;);
+&#125;
+
+int main()
+&#123;
+    
+    a();//函数名(参数列表); 但是函数a没有参数，所以不用传参
+    b(1); //函数名(int); 因为函数定义时有1个int类型参数，所以必须传1个int类型
+    return 0;
+&#125;
+</code></pre>
+<h3 id="函数的传参"><a href="#函数的传参" class="headerlink" title="函数的传参"></a>函数的传参</h3><p>函数的传参上面调用b时也演示过了，就是根据函数定义(声明)时的参数列表一一对应传参。所以再为大家提供几个传参例子。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//参数列表 (int)
+void b(int b)
+&#123;
+    printf(&quot;b&quot;);
+&#125;
+
+//参数列表 (int,double,char)
+void c(int a,double b , char c)
+&#123;
+    printf(&quot;b&quot;);
+&#125;
+
+
+int main()
+&#123;
+    b(1);//传参列表(int)
+    c(1,1.1,&#39;a&#39;); //传参列表(int,double,char); 
+    return 0;
+&#125;
+</code></pre>
+<p>不过需要注意的是， 传参给函数的参数叫实参。而函数接收的参数叫形参，形参是实参的临时拷贝，改变形参不会影响实参的值。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//参数列表 (int)
+void b(int c)
+&#123;
+    c = 5;
+&#125;
+
+int main()
+&#123;
+    int c = 2;
+    b(c);//传参列表(int)
+    printf(&quot;%d &quot;, c);
+    return 0;
+&#125;
+</code></pre>
+<p>如图，C的值并没有发生改变<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952219.png" alt="在这里插入图片描述"></p>
+<h2 id="函数的返回值"><a href="#函数的返回值" class="headerlink" title="函数的返回值"></a>函数的返回值</h2><p>当你期待一个函数会返回你一个特定的值时，你可以选择带返回值的函数。如果没有返回值，那么返回值的类型就是void。</p>
+<p>假设我要实现一个Add函数，用来求2个数的和。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+//返回值的数据类型为int
+int Add(int x, int y)
+&#123;
+    int z = x + y;
+    return z;
+&#125;
+
+int main()
+&#123;
+    int z = Add(3, 5); //用 z 来接收函数的返回值
+    printf(&quot;%d &quot;, z);
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952181.png" alt="在这里插入图片描述"></p>
+<h2 id="函数的传址调用"><a href="#函数的传址调用" class="headerlink" title="函数的传址调用"></a>函数的传址调用</h2><blockquote>
+<p>如果我们期望改变实参的值，我们可以选择传址调用，传址调用就是传指针给函数。然后函数对指针指向的空间进行操作。</p>
+</blockquote>
+<pre><code class="c">#include &lt;stdio.h&gt;
+void Swap(int* a,int* b)
+&#123;
+    int tmp = *a;
+    *a = *b;
+    *b = tmp;
+&#125;
+
+int main()
+&#123;
+    int a = 10;
+    int b = 20;
+    printf(&quot;%d,%d\n&quot;, a, b);
+    Swap(&amp;a, &amp;b);//传a和b的地址进去
+    printf(&quot;%d,%d\n&quot;, a, b);
+
+    return 0;
+&#125;
+</code></pre>
+<p>我们会发现a 和 b 的值发生了变化。因为我们给函数传的是 a 和 b的地址，而函数内部通过对a 和 b 解引用找到 a和b所在的内存空间。从而让它们进行交换。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952961.png" alt="在这里插入图片描述"></p>
+<h2 id="函数的嵌套调用"><a href="#函数的嵌套调用" class="headerlink" title="函数的嵌套调用"></a>函数的嵌套调用</h2><p>函数的嵌套调用，就是我们在另外一个函数调用其他函数。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+void b()
+&#123;
+    printf(&quot;b\n&quot;);
+&#125;
+
+void a()
+&#123;
+    printf(&quot;a\n&quot;);
+    b(); //a函数里面调用 b函数
+&#125;
+
+int main()
+&#123;
+    a();//main函数里面调用函数a
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952925.png" alt="在这里插入图片描述"><br>所以，函数也是可以嵌套调用的。</p>
+<h2 id="函数的递归"><a href="#函数的递归" class="headerlink" title="函数的递归"></a>函数的递归</h2><p>递归，栈溢出的罪魁祸首！什么是递归呢？简单来说，就是函数自己调用自己本身。比如以下代码，main函数一直调用自己。如果没有递归的终止条件的话，那么就会出现栈溢出。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+int main()
+&#123;
+    main();
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952142.png" alt="在这里插入图片描述"></p>
+<p>所以在使用递归时，我们需要注意两点，一点是递归的结束条件，还有一点就是这个条件每递归一次都要发生变化。</p>
+<p>比如我想实现一个函数，要求把一串数字倒着输出。</p>
+<pre><code class="c">#include &lt;stdio.h&gt;
+
+void a(int n)
+&#123;
+    //当n＝0时，递归终止
+    if (n == 0)
+    &#123;
+        return;
+    &#125;
+    printf(&quot;%d &quot;, n % 10);
+    //自己调用自己
+    a(n / 10);
+&#125;
+
+int main()
+&#123;
+    int n = 12345;
+    a(n);
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952758.png" alt="在这里插入图片描述"></p>
+<p>以上程序的递归展开图:<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231952824.png" alt="在这里插入图片描述"></p>
+<h1 id="结言🥳："><a href="#结言🥳：" class="headerlink" title="结言🥳："></a>结言🥳：</h1><p>  💦💦<font face="黑体" size = "4" color= "b">如果有写的不好或者错误的地方，希望大家指证出来，我会不断的改正自己的错误。💯💯如果感觉写的还可以，可以点赞三连一波哦~🍸🍸后续会持续为大家更新大纲上的内容，以及数据结构，C++，Linux操作系统等方面的知识，本人会坚持持续更新。</font><br>  <font face="黑体" size = "5" color="blac"><br>🌺🌺拖着发烧的身体也要更新！你们的支持是我最大的动力，希望在往后的日子里，我们大家一起进步！！！</font>🌺🌺</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+                <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2023 - 2023 小林的博客
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;林  子
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+            </div>
+            </transition>
+            
+            <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+            </transition>
+            
+        </div>
+        <script src="/js/main.js"></script>
+        
+        
+
+
+
+
+        
+   
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

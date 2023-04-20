@@ -3,7 +3,7 @@
 <html lang="ch">
     <head>
         <meta charset="utf-8" />
-        <title>Categories: C语言 | 小林的博客</title>
+        <title>从后与中序遍历序列构造二叉树 | 小林的博客</title>
         <meta name="author" content="林  子" />
         <meta name="description" content="烟雨江南中为等你回波一望" />
         <meta name="keywords" content="" />
@@ -27,6 +27,10 @@
 
 
 <script src="/js/lib/preview.js"></script>
+
+
+
+
 
 
 
@@ -152,26 +156,20 @@
 
             <transition name="into">
             <div id="main" v-show="!loading">
-                <div id="archives">
-    
-    <div class="categories-tags">
-        
-        
-        <span>
-            <a href="/categories/C%E8%AF%AD%E8%A8%80/" style="background: linear-gradient(120deg, #9abbf7 0%, #ffbbf4 100%)">
-                <span class="icon">
-                    <i class="fa-solid fa-bookmark fa-fw"></i>
-                </span>
-                C语言
-            </a>
+                <div class="article">
+    <div>
+        <h1>从后与中序遍历序列构造二叉树</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/25
         </span>
         
-        
-        
-        
-        
-        <span>
-            <a href="/categories/%E5%88%B7%E9%A2%98%E5%A4%A7%E6%9C%AC%E8%90%A5/" style="background: #00bcd4">
+        <span class="category">
+            <a href="/categories/%E5%88%B7%E9%A2%98%E5%A4%A7%E6%9C%AC%E8%90%A5/">
                 <span class="icon">
                     <i class="fa-solid fa-bookmark fa-fw"></i>
                 </span>
@@ -180,157 +178,71 @@
         </span>
         
         
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #ffa2c4">二叉树</a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/leetcode/" style="color: #00a596">leetcode</a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #03a9f4">递归</a>
+            </span>
+            
+        </span>
+        
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2023/2/15</div>
-            <a href="/2023/02/15/Cfunction/">
-                <h3>C语言函数</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/C%E8%AF%AD%E8%A8%80/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        C语言
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E5%87%BD%E6%95%B0/" style="color: #ff7d73">函数</a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />
+
+
+
+<h1 id="从中序与后序遍历序列构造二叉树"><a href="#从中序与后序遍历序列构造二叉树" class="headerlink" title="从中序与后序遍历序列构造二叉树"></a>从中序与后序遍历序列构造二叉树</h1><p>题目:<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231957240.png" alt="在这里插入图片描述"></p>
+<p>解题思路:<br>中序与后序构造前序二叉树，和前序与中旬构造后序二叉树差不多。思想都是一致的，有3个变量，posti控制树的根，begini和endi控制树的区间。前序数组的第一个元素就是树的根，那么后序数组的最后一个元素就是它的根。从后往前需要注意点的就是，必须要先连接右树，再连左树，否则posti的值会对不上。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231957963.gif" alt="在这里插入图片描述"></p>
+<p>代码:</p>
+<pre><code class="c">    TreeNode* _buildTree(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder,int&amp; posti,int begini,int endi) &#123;
+        //左区间比右区间大， 说明没有节点了
+        if(begini &gt; endi)
+            return nullptr;
+        //创建根节点
+        TreeNode* root = new TreeNode(postorder[posti]);
+        int rooti = 0 ;
+        //找到根节点在中序数组的下标
+        while(inorder[rooti] != root-&gt;val)
+        &#123;
+            rooti++;
+        &#125;
+        posti--;
+        //先链接右节点，后序遍历是左，右，根。反过来就是 根 右 左
+        root-&gt;right = _buildTree(inorder,postorder,posti,rooti+1,endi);
+        root-&gt;left = _buildTree(inorder,postorder,posti,begini,rooti-1);
+        return root;
+    &#125;
+    
+    TreeNode* buildTree(vector&lt;int&gt;&amp; inorder, vector&lt;int&gt;&amp; postorder) &#123;
+        int posti = postorder.size() - 1;
+        return _buildTree(inorder,postorder,posti,0, postorder.size() - 1);
+    &#125;
+</code></pre>
+<p>题目链接:<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/construct-binary-tree-from-inorder-and-postorder-traversal/">从中序与后序遍历序列构造二叉树</a></p>
+
     </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2023/2/15</div>
-            <a href="/2023/02/15/circle/">
-                <h3>C语言循环</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/C%E8%AF%AD%E8%A8%80/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        C语言
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E5%BE%AA%E7%8E%AF/" style="color: #03a9f4">循环</a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
-    </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2023/2/14</div>
-            <a href="/2023/02/14/C2/">
-                <h3>C语言入门(2)</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/C%E8%AF%AD%E8%A8%80/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        C语言
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="color: #ffa2c4">字符串</a>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/" style="color: #ff7d73">分支语句</a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
-    </div>
     
-    <div class="timeline">
-        <div class="timeline-tail"></div>
-        <div class="timeline-content">
-            <div class="item-time">2023/2/14</div>
-            <a href="/2023/02/14/C1/">
-                <h3>C语言入门(1)</h3>
-            </a>
-            <div class="info">
-                
-                <span class="category">
-                    <a href="/categories/C%E8%AF%AD%E8%A8%80/">
-                        <span class="icon">
-                            <i class="fa-solid fa-bookmark fa-fw"></i>
-                        </span>
-                        C语言
-                    </a>
-                </span>
-                
-                
-                <span class="tags">
-                    <span class="icon">
-                        <i class="fa-solid fa-tags fa-fw"></i>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" style="color: #ff7d73">数据类型</a>
-                    </span>
-                    
-                    <span class="tag">
-                        
-                        <a href="/tags/%E5%8F%98%E9%87%8F/" style="color: #03a9f4">变量</a>
-                    </span>
-                    
-                </span>
-                
-            </div>
-        </div>
-    </div>
+    
+    
+    
     
 </div>
 
@@ -363,6 +275,12 @@
             
         </div>
         <script src="/js/main.js"></script>
+        
+        
+
+
+
+
         
    
     <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>

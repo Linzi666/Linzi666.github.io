@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="utf-8" />
+        <title>C语言循环 | 小林的博客</title>
+        <meta name="author" content="林  子" />
+        <meta name="description" content="烟雨江南中为等你回波一望" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="/images/favicon.png" />
+        <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.3.0/css/all.min.css" />
+<link rel="stylesheet" href="/css/fonts.min.css" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.7.0/highlight.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.7.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+
+
+        <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.min.js"></script>
+    <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.min.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+
+
+
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="layout">
+            <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+            </transition>
+            <nav id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <div class="desktop-menu">
+        <a class="title" href="/">
+            <span>小林的博客</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </div>
+    <div id="mobile-menu">
+        <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
+        <div class="title" @click="shouMenuItems = !shouMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;小林的博客</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="shouMenuItems">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+
+            <transition name="into">
+            <div id="main" v-show="!loading">
+                <div class="article">
+    <div>
+        <h1>C语言循环</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/15
+        </span>
+        
+        <span class="category">
+            <a href="/categories/C%E8%AF%AD%E8%A8%80/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                C语言
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E5%BE%AA%E7%8E%AF/" style="color: #ff7d73">循环</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" />  
+
+<h1 id="循环语句"><a href="#循环语句" class="headerlink" title="循环语句"></a>循环语句</h1><blockquote>
+<p><font color="#ed83ab" size=4 face="黑体" >在生活中，我们经常需要进行一些重复的操作。比如在操场跑步时，每一圈就是一个循环。而程序里也有很多重复的操作，如果我们要输出1-100之间的每个数，如果把它们全打出来，那是非常麻烦的，所以我们可以使用循环语句。</font></p>
+</blockquote>
+<h2 id="while循环"><a href="#while循环" class="headerlink" title="while循环"></a>while循环</h2><h3 id="while循环的使用"><a href="#while循环的使用" class="headerlink" title="while循环的使用"></a>while循环的使用</h3><p><font color="#ed83ab" size=4 face="黑体" >while循环的使用格式：</font><code>while(循环条件) &#123;循环体;&#125;</code><br>括号里面的是循环条件，而花括号里面，是要执行的内容。</p>
+<p>代码：</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int a = 0;
+    while (a &lt; 10)
+    &#123;
+        printf(&quot;%d &quot;, a);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>这个代码可以执行，但运行出来会一直在屏幕打印0。根本原因是因为 a的值没有发生变化，导致 每次循环条件都是满足的，因此会死循环。要避免这种条件，我们必须要让循环条件在每次循环后更接近假。</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int a = 0;
+    while (a &lt; 10)
+    &#123;
+        printf(&quot;%d &quot;, a);
+        a++；		
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>而这样，每次循环结束后，a 都会自增一次，在循环10次后，a 就会等于10。此时 a &lt; 10的条件不再满足，while循环判断条件为假。因此循环结束。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953257.png" alt="在这里插入图片描述"></p>
+<h3 id="while循环的执行流程"><a href="#while循环的执行流程" class="headerlink" title="while循环的执行流程"></a>while循环的执行流程</h3><p>while循环的执行流程是 <code>先判断 判断为真，执行。为假，退出循环。 </code><br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953169.png" alt="在这里插入图片描述"><br>也就是说，如果循环条件不为假，那么循环会一直进行下去，直到循环条件为假才会停下来。循环内容执行结束后，会重新进行条件判断。</p>
+<blockquote>
+<p>1.进行条件判断，条件为真执行步骤2，为假执行步骤4<br>2.执行循环体内容<br>3.循环体内容执行完毕，跳到步骤1<br>4.退出循环</p>
+</blockquote>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953582.png" alt="在这里插入图片描述"></p>
+<h2 id="for-循环"><a href="#for-循环" class="headerlink" title="for 循环"></a>for 循环</h2><blockquote>
+<p>for 循环和 while循环的执行流程并无太大区别。只是语法上有一些差异。</p>
+</blockquote>
+<h3 id="for循环的使用"><a href="#for循环的使用" class="headerlink" title="for循环的使用"></a>for循环的使用</h3><p>for循环的使用格式：<code>for(变量初始化;循环条件;条件变化) &#123;循环体;&#125;</code><br>如果不理解的请先看以下for循环的代码。</p>
+<p>代码:</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    for (int i = 0; i &lt; 10; i++)
+    &#123;
+            printf(&quot;%d &quot;, i);		
+    &#125;
+    
+    return 0;
+&#125;
+</code></pre>
+<p>变量初始化： int i &#x3D; 0 ，就是初始化了一个变量i<br/><br>循环条件： i &lt; 10 意思是只要 i 小于 10 就循环 <br/><br>条件变化： i++ ，i每次自增，i离10就更近了一步，就意味离循环结束更近一步，也就是循环条件发生变化。 </p>
+<h3 id="for循环的执行流程"><a href="#for循环的执行流程" class="headerlink" title="for循环的执行流程"></a>for循环的执行流程</h3><p>for循环的执行流程需要注意以下几点：</p>
+<blockquote>
+<p>1.整个循环中变量只会初始化一次。<br>2.条件变化在循环体结束之后进行。</p>
+</blockquote>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953219.png" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953433.png" alt="在这里插入图片描述"></p>
+<h2 id="do-while循环"><a href="#do-while循环" class="headerlink" title="do while循环"></a>do while循环</h2><blockquote>
+<p>do while循环和while循环只有一个区别，那就是do while 是先执行，再判断，而while 是先判断，再执行。</p>
+</blockquote>
+<h3 id="do-while循环的使用"><a href="#do-while循环的使用" class="headerlink" title="do while循环的使用"></a>do while循环的使用</h3><p>我们刚刚说过，do while 循环是先执行，再判断的。这就意味着，无论如何，do while都至少会执行一次。第一次执行完后再进行条件判断，判断是否执行下一次。</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int a = 100;
+
+    do
+    &#123;
+        //循环体
+        printf(&quot;%d &quot;, a);
+    &#125; while (a &lt; 1);
+
+    return 0;
+&#125;
+</code></pre>
+<p>因为 a &#x3D; 100，所以 while(a &lt; 1)这个条件不会成立，但是这个程序依然会打印一次a，因为是先执行，后判断的。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953306.png" alt="在这里插入图片描述"></p>
+<h3 id="do-while循环的执行流程"><a href="#do-while循环的执行流程" class="headerlink" title="do while循环的执行流程"></a>do while循环的执行流程</h3><blockquote>
+<p>1.先执行循环体<br>2.条件判断，为真继续执行循环体，为假退出循环。</p>
+</blockquote>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953818.png" alt="在这里插入图片描述"></p>
+<h2 id="break语句"><a href="#break语句" class="headerlink" title="break语句"></a>break语句</h2><blockquote>
+<p>break是一个关键字，主要应用于2个场景<br>1.switch分支语句<br>2.循环语句</p>
+</blockquote>
+<p>而在循环语句里，break的作用只有一个，那就是结束循环。</p>
+<p>但是要注意的是，break只会跳出当前循环，在循环嵌套的情况下，它不会结束外层循环。</p>
+<p>单层循环的情况：</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    for (int i = 0; i &lt; 100; i++)
+    &#123;
+        if (i &gt; 10)
+        &#123;
+            break;
+        &#125;
+        printf(&quot;%d &quot;, i);
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<p>我们在里面加了一个if判断，如果 i大于10，就break跳出循环。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953278.png" alt="在这里插入图片描述"><br>我们可以看到当i＝10的时候，循环就结束了，是因为满足了 i &gt;10这个条件，执行了break语句。</p>
+<p>break语句在while循环里也同样适用。</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    int i = 0;
+    while (i &lt; 100)
+    &#123;
+        if (i &gt; 10)
+        &#123;
+            break;
+        &#125;
+        printf(&quot;%d &quot;, i);
+        i++;
+    &#125;
+
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953726.png" alt="在这里插入图片描述"><br>在do while语句也同样试用，这里就不演示了。</p>
+<h2 id="continue语句"><a href="#continue语句" class="headerlink" title="continue语句"></a>continue语句</h2><blockquote>
+<p>continue语句和break语句同样是关键字。continue语句只能用在循环里面，continue语句的功能是结束本次循环，开始下一次循环。</p>
+</blockquote>
+<p>我们来看看以下这一段代码</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    for (int i = 0; i &lt; 10; i++)
+    &#123;
+        if (i == 5)
+        &#123;
+            continue;
+        &#125;
+        printf(&quot;%d &quot;, i);
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>当i &#x3D;&#x3D; 5 时，我们执行continue语句，让我们看看continue语句的效果。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953279.png" alt="在这里插入图片描述"><br>我们会发现，5 没有打印出来，这是因为当i等于5的时候，continue语句直接结束了本次循环，开始了下一次循环，所以当 i &#x3D; 5 时，continue下面的语句没有被执行。</p>
+<p>如果我们把打印语句放在continue的上面呢？</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    for (int i = 0; i &lt; 10; i++)
+    &#123;
+        printf(&quot;%d &quot;, i);
+        if (i == 5)
+        &#123;
+            continue;
+        &#125;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>那么 5 依旧会被打印出来，因为打印语句在continue的前面，它先被执行了，当执行到continue时，才会结束本次循环开始下一次循环。也就是说只有continue之后的语句，才不会被执行。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953938.png" alt="在这里插入图片描述"></p>
+<BR/>
+但是在while循环中使用continue，需要注意！条件的变化语句不能放在continue之后，否则会死循环！
+<br/><br/>
+例如下面这一段代码:
+
+<pre><code class="c">#include&lt;stdui.h&gt;
+
+int main()
+&#123;
+    int a = 0;
+    while (a &lt; 10)
+    &#123;
+        printf(&quot;%d &quot;, a);
+        if (a == 5)
+        &#123;
+            continue;
+        &#125;
+        a++;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>我们可以看到，a++在continue之后，那么a++这条语句就不会被执行，那么程序就会死循环。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953463.png" alt="在这里插入图片描述"></p>
+<p>正确的做法是把a++放在continue之前。</p>
+<pre><code class="c">#include&lt;stdui.h&gt;
+int main()
+&#123;
+    int a = 0;
+    while (a &lt; 10)
+    &#123;
+        printf(&quot;%d &quot;, a);
+        a++;
+
+        if (a == 5)
+        &#123;
+            continue;
+        &#125;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953269.png"></p>
+<p>这样 避免了这个问题，所以在while语句里使用continue需要格外注意。for循环则不需要担心这个问题，因为条件变化是在循环体执行结束后才执行的。</p>
+<h2 id="循环嵌套"><a href="#循环嵌套" class="headerlink" title="循环嵌套"></a>循环嵌套</h2><blockquote>
+<p>当然，循环之间也可以嵌套。就是在一个循环里面再套一个循环。</p>
+</blockquote>
+<p>循环嵌套的代码 ：</p>
+<pre><code class="c">#include&lt;stdio.h&gt;
+int main()
+&#123;
+    for(int i = 0 ; i &lt; 5;i++) //第一层循环
+    &#123;
+        for (int j = 0; j &lt; 5; j++)//第二层循环
+        &#123;
+            printf(&quot;i = %d j = %d\n&quot;, i, j);
+        &#125;
+    &#125;
+    return 0;
+&#125;
+</code></pre>
+<p>运行结果<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231953076.png" alt="在这里插入图片描述"></p>
+<p>也就是外层循环每执行一次，都会把内层循环整个执行一遍。所以 printf()执行的次数是 5 * 5，也就是执行了25次。</p>
+<h1 id="结言："><a href="#结言：" class="headerlink" title="结言："></a>结言：</h1><p>  💦💦<font face="黑体" size = "4" color= "b">如果有写的不好或者错误的地方，希望大家指证出来，我会不断的改正自己的错误。💯💯如果感觉写的还可以，可以点赞三连一波哦~🍸🍸后续会持续为大家更新大纲上的内容，以及数据结构，C++，Linux操作系统等方面的知识，本人会坚持持续更新。</font><br>  <font face="黑体" size = "5" color="blac"><br>🌺🌺你们的支持是我最大的动力，希望在往后的日子里，我们大家一起进步！！！</font>🌺🌺</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+                <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2023 - 2023 小林的博客
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;林  子
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+            </div>
+            </transition>
+            
+            <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+            </transition>
+            
+        </div>
+        <script src="/js/main.js"></script>
+        
+        
+
+
+
+
+        
+   
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
