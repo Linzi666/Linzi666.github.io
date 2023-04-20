@@ -32,22 +32,25 @@
 
 
 
-
-
-
-
 <link rel="stylesheet" href="/css/main.css" />
 
 
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script> 
 
-        <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
-    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
-    <script src="/js/fireworks.min.js"></script>
-    <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
-    <script src="/js/background.min.js"></script>
-    <div id="cursor"></div>
-    <link rel="stylesheet" href="/css/cursor.min.css">
-    <script src="/js/cursor.min.js"></script>
+<canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+
+<div id="cursor"></div>
+<link rel="stylesheet" href="/css/cursor.min.css" />
+<script src="/js/cursor.min.js"></script>
 
 
 
@@ -156,30 +159,121 @@
 
             <transition name="into">
             <div id="main" v-show="!loading">
-                <div class="article">
-    <div>
-        <h1>tags</h1>
-    </div>
-    <div class="info">
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2023/4/19
+                <div id="archives">
+    
+    <div class="categories-tags">
+        
+        
+        <span>
+            <a href="/tags/%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                数据类型
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%8F%98%E9%87%8F/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                变量
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%AD%97%E7%AC%A6%E4%B8%B2/" style="background: #ffa2c4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                字符串
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/" style="background: #ff7d73">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                分支语句
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%87%BD%E6%95%B0/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                函数
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E5%BE%AA%E7%8E%AF/" style="background: #00bcd4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                循环
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="background: #03a9f4">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                二叉树
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/leetcode/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                leetcode
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E9%80%92%E5%BD%92/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                递归
+            </a>
+        </span>
+        
+        
+        
+        <span>
+            <a href="/tags/%E9%93%BE%E8%A1%A8/" style="background: #00a596">
+                <span class="icon">
+                    <i class="fa-solid fa-tags fa-fw"></i>
+                </span>
+                链表
+            </a>
         </span>
         
         
     </div>
-    
-    <div class="content" v-pre>
-        
-    </div>
-    
-    
-    
-    
-    
-    
     
 </div>
 
@@ -212,12 +306,6 @@
             
         </div>
         <script src="/js/main.js"></script>
-        
-        
-
-
-
-
         
    
     <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
