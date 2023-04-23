@@ -1,0 +1,1051 @@
+
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="utf-8" />
+        <title>C++中vector的实现 | 小林的博客</title>
+        <meta name="author" content="林  子" />
+        <meta name="description" content="烟雨江南中为等你回波一望" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="/images/favicon.png" />
+        <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.3.0/css/all.min.css" />
+<link rel="stylesheet" href="/css/fonts.min.css" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.7.0/highlight.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.7.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.staticfile.org/twikoo/1.6.10/twikoo.all.min.js"></script>
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script> 
+
+<canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+
+<div id="cursor"></div>
+<link rel="stylesheet" href="/css/cursor.min.css" />
+<script src="/js/cursor.min.js"></script>
+
+
+
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="layout">
+            <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+            </transition>
+            <nav id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <div class="desktop-menu">
+        <a class="title" href="/">
+            <span>小林的博客</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;首页</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于我</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;目录</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+        <a href="/books">
+            <i class="fa-solid fa- fa-fw"></i>
+            <span>&ensp;书库</span>
+        </a>
+        
+    </div>
+    <div id="mobile-menu">
+        <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
+        <div class="title" @click="shouMenuItems = !shouMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;小林的博客</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="shouMenuItems">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">首页</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">关于我</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">目录</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                </div>
+            </a>
+            
+            <a href="/books">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa- fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">书库</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+
+            <transition name="into">
+            <div id="main" v-show="!loading">
+                <div class="article">
+    <div>
+        <h1>C++中vector的实现</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/16
+        </span>
+        
+        <span class="category">
+            <a href="/categories/C/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                C++
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/STL/" style="color: #00bcd4">STL</a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/vtctor/" style="color: #00bcd4">vtctor</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <meta name="referrer" content="no-referrer" /> 
+
+<p>**</p>
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>vector 是一个顺序容器，简单来说就是一个可以扩容的数组。它的数据在内存中是连续存储的。这也就意味着它支持随机访问(下标访问)，而这篇文章将会带着大家模拟实现一个vector的容器。</p>
+<hr>
+<h1 id="vector的成员属性"><a href="#vector的成员属性" class="headerlink" title="vector的成员属性"></a>vector的成员属性</h1><p>  vector是一个顺序容器，那么我们需要给它分配空间。那么我们可以用三个迭代器来指向，_start迭代器指向第一个位置，_finish指向有效数据的下一个位置，而_endofstorage指向开辟空间大小的最后一个位置。</p>
+<p>代码:</p>
+<pre><code class="c">template&lt;class T&gt;
+class vector
+&#123;
+public:
+    //普通迭代器
+    typedef T* iterator;
+    //const迭代器
+    typedef const T* const_iterator;
+private:
+    iterator _start;
+    iterator _finish;
+    iterator _endofstorage;
+    
+&#125;;
+</code></pre>
+<hr>
+<h1 id="构造函数"><a href="#构造函数" class="headerlink" title="构造函数"></a>构造函数</h1><p>接下来我们就要给vector初始化，这里用2种初始化方式，一种是普通初始化。而一种是迭代器区间初始化。<br>普通初始化：什么也不干，迭代器初始化成空指针。<br>迭代器区间初始化：把迭代器区间的所有值一一加到当前的vector对象种。</p>
+<p>普通初始化代码：</p>
+<pre><code class="c">    vector()
+        :_start(nullptr)
+        ,_finish(nullptr)
+        ,_endofstorage(nullptr)
+    &#123;		
+    &#125;
+</code></pre>
+<p>迭代器区间初始化：</p>
+<pre><code class="c">    //迭代器区间初始化
+    template &lt;class InputIterator&gt;
+    vector(InputIterator first, InputIterator last)
+        :_start(nullptr)
+        ,_finish(nullptr)
+        ,_endofstorage(nullptr)
+    &#123;
+        while (first != last)
+        &#123;
+            //把迭代器数据依次插入当前对象
+            push_back(*first);//尾部插入数据的函数，在下面实现
+            ++first;
+        &#125;
+    &#125;
+</code></pre>
+<hr>
+<h1 id="size函数"><a href="#size函数" class="headerlink" title="size函数"></a>size函数</h1><p>size函数返回vector的长度，也就是已经存放的数据个数，我们直接返回_finish - _start的值即可。</p>
+<pre><code class="c">    size_t size()
+    &#123;
+        return _finish - _start;
+    &#125;
+</code></pre>
+<p>如果是const对象，我们也要返回一个长度</p>
+<pre><code class="c">    size_t size()const
+    &#123;
+        return _finish - _start;
+    &#125;
+</code></pre>
+<hr>
+<h1 id="cacpcity函数"><a href="#cacpcity函数" class="headerlink" title="cacpcity函数"></a>cacpcity函数</h1><p>cacpcity函数返回vector的容量，也就是能存放的数据的最大个数，我们直接返回_endofstorage - _start的值即可。</p>
+<pre><code class="c">    size_t cacpcity()
+    &#123;
+        return _endofstorage - _start;
+    &#125;
+</code></pre>
+<p>如果是const对象，我们也要返回</p>
+<pre><code class="c">    size_t cacpcity()const
+    &#123;
+        return _endofstorage - _start;
+    &#125;
+</code></pre>
+<hr>
+<h1 id="begin和end函数"><a href="#begin和end函数" class="headerlink" title="begin和end函数"></a>begin和end函数</h1><p>begin 获取 迭代器开始位置，end 获取迭代器结束位置。</p>
+<p>直接返回_start 和 _finish</p>
+<pre><code class="c">        iterator begin()
+        &#123;
+            return _start;
+        &#125;
+        iterator end()
+        &#123;
+            return _finish;
+        &#125;
+</code></pre>
+<p>当我们的容器是const的时候，我们需要返回const迭代器。所以还需要对begin和end函数进行函数重载。</p>
+<pre><code class="c">        iterator begin()
+        &#123;
+            return _start;
+        &#125;
+        iterator end()
+        &#123;
+            return _finish;
+        &#125;
+
+        const_iterator begin()const
+        &#123;
+            return _start;
+        &#125;
+        const_iterator end()const
+        &#123;
+            return _finish;
+        &#125;
+</code></pre>
+<hr>
+<h1 id="reserve函数"><a href="#reserve函数" class="headerlink" title="reserve函数"></a>reserve函数</h1><p>reserve函数是用来改变容量的，但是对于缩容我们不做处理，reserve只做增容处理。</p>
+<p>我们可以分以下步骤:</p>
+<blockquote>
+<ol>
+<li>开辟一块指定大小的空间(只增容)。</li>
+<li>把原_start空间的数据拷贝到新空间。</li>
+<li>更新_finish。</li>
+<li>释放原来的_start。</li>
+<li>更新_start 和 _endofstorage</li>
+</ol>
+</blockquote>
+<p>代码:</p>
+<pre><code class="c">void reserve(size_t n)
+    &#123;
+        //n比当前容量大
+            if (cacpcity() &lt; n)
+            &#123;
+                //开辟n个空间
+                T* tmp = new T[n];
+                //拷贝
+                for (int i = 0; i &lt; size(); i++)
+                &#123;
+                    *(tmp + i) = *(_start + i);
+                &#125;
+                //更新_finish
+                _finish = tmp + size();
+                //销毁旧空间
+                delete[] _start;
+                //更新
+                _start = tmp;
+                _endofstorage = _start + n;
+            &#125;
+    &#125;
+</code></pre>
+<hr>
+<h1 id="insert函数"><a href="#insert函数" class="headerlink" title="insert函数"></a>insert函数</h1><p>insert函数是在容器指定位置插入一个数据，而实现insert后我们可以复用insert实现push_back尾插函数。<br>而这个指定位置，我们用迭代器来表示。插入完后，我们返回插入数据的迭代器位置，方便迭代。</p>
+<pre><code class="c">            ////指定位置插入
+        iterator insert(iterator pos, const T&amp; val)
+        &#123;
+            //pos必须在 _start  - _finish之间
+            assert(pos &gt;= _start &amp;&amp; pos &lt;= _finish);
+            //判断空间是否足够
+            if (_finish == _endofstorage)
+            &#123;
+                size_t len = pos - _start;
+                //空间不够，增容，是0增容4，不是0增容2倍
+                reserve(cacpcity() == 0 ? 4 : 2 * cacpcity());
+                pos = _start + len;
+            &#125;
+            //把pos - finish 的位置都往后移动
+            iterator end = _finish;
+            while (end &gt; pos)
+            &#123;
+                *(end) = *(end - 1);
+                --end;
+            &#125;
+            *pos = val;
+            ++_finish;
+            //返回pos迭代器
+            return pos;
+        &#125;
+</code></pre>
+<h1 id="push-back函数"><a href="#push-back函数" class="headerlink" title="push_back函数"></a>push_back函数</h1><p>push_back是一个尾插函数，而我们前面实现过insert，所以可以直接复用。</p>
+<pre><code class="c">
+        void push_back(const T&amp; val)
+        &#123;
+            //复用insert
+            insert(end(), val);
+        &#125;
+</code></pre>
+<h1 id="操作符重载"><a href="#操作符重载" class="headerlink" title="[]操作符重载"></a>[]操作符重载</h1><p>我们要支持下标访问，可以重载[]操作符，给定一个下标，返回_start+下标的解引用的引用即可。</p>
+<pre><code class="c">        T&amp; operator[](const T&amp; val)
+        &#123;
+            return *(_start + val);;
+        &#125;
+</code></pre>
+<p>如果是const对象，那么我们不允许修改[]的值。</p>
+<pre><code class="c">
+        const T&amp; operator[](const T&amp; val)const
+        &#123;
+            return *(_start + val);;
+        &#125;
+</code></pre>
+<h1 id="析构函数"><a href="#析构函数" class="headerlink" title="析构函数"></a>析构函数</h1><p>直接释放_start的空间即可。</p>
+<pre><code class="c">        ~vector()
+        &#123;
+            delete[] _start;
+            _start = _finish = _endofstorage = nullptr;
+        &#125;
+</code></pre>
+<h1 id="拷贝构造函数"><a href="#拷贝构造函数" class="headerlink" title="拷贝构造函数"></a>拷贝构造函数</h1><p>我们可以用 被拷贝对象的迭代区间实例化一个对象，再把当前对象与这个对象进行交换。<br>然后出了函数，实例化的对象会被自动析构。</p>
+<pre><code class="c">        void swap(vector&lt;T&gt;&amp; v)
+        &#123;
+            std::swap(_start, v._start);
+            std::swap(_finish, v._finish);
+            std::swap(_endofstorage, v._endofstorage);
+        &#125;
+
+        vector(const vector&lt;T&gt;&amp; v)
+        &#123;
+            vector&lt;T&gt; tmp(v.begin(), v.end());
+            //交换
+            swap(tmp);
+        &#125;
+</code></pre>
+<h1 id="赋值操作符重载"><a href="#赋值操作符重载" class="headerlink" title="赋值操作符重载"></a>赋值操作符重载</h1><p>直接用拷贝构造构造一个，然后和当前对象交换。</p>
+<pre><code class="c">        vector&lt;T&gt;&amp; operator=(const vector&lt;int&gt; v)
+        &#123;
+            vector v2(v);
+            swap(v2);
+            return *this;
+        &#125;
+</code></pre>
+<h1 id="erase函数"><a href="#erase函数" class="headerlink" title="erase函数"></a>erase函数</h1><p>eraser函数是在指定位置删除，我们依旧通过迭代器的方式删除。删除后，返回原来下标的迭代器。</p>
+<p>代码:</p>
+<pre><code class="c">
+        iterator erase(iterator pos)
+        &#123;
+            //pos必须在start - finish区间，且 size不能为空
+            assert(size() &gt; 0);
+            assert(pos &gt;= _start &amp;&amp; pos &lt; _finish);
+            int len = pos - _start;
+            //从pos的下一个位置开始，往前覆盖
+            iterator begin = pos + 1;
+            while (begin != _finish)
+            &#123;
+                *(begin - 1) = *begin;
+                ++begin;
+            &#125;
+            _finish--;
+
+            return pos;
+        &#125;
+</code></pre>
+<h1 id="pop-back"><a href="#pop-back" class="headerlink" title="pop_back"></a>pop_back</h1><p>pop_back是一个尾删函数，也就是删除最后一个数据，我们可以复用erase</p>
+<pre><code class="c">        void pop_back()
+        &#123;
+            erase(end() - 1);
+        &#125;
+</code></pre>
+<p>end是指向最后一个数据的下一个位置，所以 -1 就是最后一个数据。</p>
+<h1 id="反向迭代器"><a href="#反向迭代器" class="headerlink" title="反向迭代器"></a>反向迭代器</h1><p>反向迭代器我们需要再有一个类来封装它，目的是为了让它具有复用性。不仅让它可以在 vector中使用，在list里也可以复用 。</p>
+<h2 id="反向迭代器模板"><a href="#反向迭代器模板" class="headerlink" title="反向迭代器模板"></a>反向迭代器模板</h2><p>我们可以用模板来接收，目的是为了让它既能生成普通反向迭代器，也可以生成带有const的反向迭代器。iterator是传过来的普通迭代器，Ref是返回解引用后的值，Ptr是返回指针。</p>
+<pre><code class="c">template&lt;class iterator,class Ref,class Ptr&gt;
+class _reverse_iterator
+&#123;
+    typedef _reverse_iterator&lt;iterator, Ref, Ptr&gt; self;
+public:	
+private:
+    iterator reverse_iterator;
+&#125;;
+</code></pre>
+<h2 id="反向迭代器的构造函数"><a href="#反向迭代器的构造函数" class="headerlink" title="反向迭代器的构造函数"></a>反向迭代器的构造函数</h2><p>反向迭代器其实就是正向迭代器封装，只是++操作变–，–操作变++</p>
+<pre><code class="c">    _reverse_iterator(iterator it)
+        :_it(it)
+    &#123;&#125;
+</code></pre>
+<h2 id="运算符重载"><a href="#运算符重载" class="headerlink" title="++运算符重载"></a>++运算符重载</h2><p>反向迭代器的++是普通迭代器的- -</p>
+<pre><code class="c">    //前置++
+    self&amp; operator++()
+    &#123;
+        --_it;
+        return *this;
+    &#125;
+    //后置++
+    self operator++(int)
+    &#123;
+        self tmp(*this);
+        --_it;
+        return tmp;
+    &#125;
+</code></pre>
+<h2 id="运算符重载-1"><a href="#运算符重载-1" class="headerlink" title="- -运算符重载"></a>- -运算符重载</h2><p>反向迭代器的- - 是正向迭代器的++</p>
+<pre><code class="c">//前置--
+    self&amp; operator--()
+    &#123;
+        ++_it;
+        return *this;
+    &#125;
+    //后置--
+    self operator--(int)
+    &#123;
+        self tmp(*this);
+        ++_it;
+        return tmp;
+    &#125;
+</code></pre>
+<h2 id="引用操作符重载"><a href="#引用操作符重载" class="headerlink" title="*引用操作符重载"></a>*引用操作符重载</h2><p>根据官方的stl，解引用返回的其实是它反向迭代器的前一个位置。<br>因为起始位置是在最后一个数据的下一个位置。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232005118.png" alt="在这里插入图片描述"><br>所以返回它的前一个位置即可</p>
+<pre><code class="c">    Ref operator*()
+    &#123;
+        iterator tmp = (*this)._it;
+        return *(--tmp);
+    &#125;
+</code></pre>
+<p>然后我们在主类里面加上模板。</p>
+<pre><code class="c">typedef _reverse_iterator&lt;iterator, T&amp;, T*&gt; reverse_iterator;
+typedef _reverse_iterator&lt;const_iterator, const T&amp;,const T*&gt; const_reverse_iterator;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232005717.png" alt="在这里插入图片描述"></p>
+<h2 id="！-x3D-操作符重载"><a href="#！-x3D-操作符重载" class="headerlink" title="！&#x3D;操作符重载"></a>！&#x3D;操作符重载</h2><p>比较地址相不相等，直接返回结果即可。</p>
+<pre><code class="c">    bool operator!=(const self&amp; it)
+    &#123;
+        return _it != it._it;
+    &#125;
+
+    bool operator!=(const self&amp; it)const
+    &#123;
+        return _it != it._it;
+    &#125;
+</code></pre>
+<h2 id="x3D-x3D-操作符重载"><a href="#x3D-x3D-操作符重载" class="headerlink" title="&#x3D;&#x3D;操作符重载"></a>&#x3D;&#x3D;操作符重载</h2><p>一样，直接返回结果即可。</p>
+<pre><code class="c">    bool operator==(const self&amp; it)
+    &#123;
+        return _it == it._it;
+    &#125;
+
+    bool operator==(const self&amp; it)const
+    &#123;
+        return _it == it._it;
+    &#125;
+</code></pre>
+<h2 id="rbegin函数"><a href="#rbegin函数" class="headerlink" title="rbegin函数"></a>rbegin函数</h2><p>rbegin函数返回最后一个数据的下一个位置，也就是_finish，那我们就用_finish实例化一个反向迭代器。</p>
+<pre><code class="c">        reverse_iterator rbegin()
+        &#123;
+            return reverse_iterator(_finish);
+        &#125;
+</code></pre>
+<p>对于const容器，我们返回const的反向迭代器</p>
+<pre><code class="c">        const_reverse_iterator rbegin()const
+        &#123;
+            return const_reverse_iterator(_finish);
+        &#125;
+</code></pre>
+<h2 id="rend函数"><a href="#rend函数" class="headerlink" title="rend函数"></a>rend函数</h2><p>rend函数就是第一个元素，我们用_start实例化反向迭代器然后返回。</p>
+<pre><code class="c">        reverse_iterator rend()
+        &#123;
+            return reverse_iterator(_start);
+        &#125;
+</code></pre>
+<p>const 容器返回const的反向迭代器</p>
+<pre><code class="c">
+        const_reverse_iterator rend()const
+        &#123;
+            return const_reverse_iterator(_start);
+        &#125;
+</code></pre>
+<h2 id="gt-重载"><a href="#gt-重载" class="headerlink" title="-&gt;重载"></a>-&gt;重载</h2><p>如果我们vector存的是一个对象类型，我们还需要支持-&gt;访问。所以重载-&gt;操作符。</p>
+<pre><code class="c">Ptr operator-&gt;()
+    &#123;	
+        return &amp;operator*();;
+    &#125;
+</code></pre>
+<p>我们-&gt;也要返回前一个地址，而*操作符返回的是解引用后的值，我们对这个值取地址即可。</p>
+<hr>
+<p>全部代码:<br>vector.h全部代码:</p>
+<pre><code class="c">#pragma once
+#include&lt;assert.h&gt;
+#include&lt;iostream&gt;
+#include&quot;reverse_iterator.h&quot;
+using namespace std;
+namespace wyl
+&#123;
+    template&lt;class T&gt;
+    class vector
+    &#123;
+    public:
+        //普通迭代器
+        typedef T* iterator;
+        //const迭代器
+        typedef const T* const_iterator;
+        //反向迭代器
+        typedef _reverse_iterator&lt;iterator, T&amp;, T*&gt; reverse_iterator;
+        typedef _reverse_iterator&lt;const_iterator, const T&amp;,const T*&gt; const_reverse_iterator;
+
+        vector()
+            :_start(nullptr)
+            , _finish(nullptr)
+            , _endofstorage(nullptr)
+        &#123;
+        &#125;
+        //迭代器区间初始化
+        template &lt;class InputIterator&gt;
+        vector(InputIterator first, InputIterator last)
+            :_start(nullptr)
+            , _finish(nullptr)
+            , _endofstorage(nullptr)
+        &#123;
+            while (first != last)
+            &#123;
+                //把迭代器数据依次插入当前对象
+                push_back(*first);
+                ++first;
+            &#125;
+        &#125;
+
+        ~vector()
+        &#123;
+            delete[] _start;
+            _start = _finish = _endofstorage = nullptr;
+        &#125;
+
+        void swap(vector&lt;T&gt;&amp; v)
+        &#123;
+            std::swap(_start, v._start);
+            std::swap(_finish, v._finish);
+            std::swap(_endofstorage, v._endofstorage);
+        &#125;
+
+        vector(const vector&lt;T&gt;&amp; v)
+        &#123;
+            vector&lt;T&gt; tmp(v.begin(), v.end());
+            //交换
+            swap(tmp);
+        &#125;
+
+        T&amp; operator[](const T&amp; val)
+        &#123;
+            return *(_start + val);
+        &#125;
+
+        vector&lt;T&gt;&amp; operator=(const vector&lt;int&gt; v)
+        &#123;
+            vector v2(v);
+            swap(v2);
+            return *this;
+        &#125;
+
+        const T&amp; operator[](const T&amp; val)const
+        &#123;
+            return *(_start + val);;
+        &#125;
+
+        size_t size()
+        &#123;
+            return _finish - _start;
+        &#125;
+
+        size_t size()const
+        &#123;
+            return _finish - _start;
+        &#125;
+
+
+        size_t cacpcity()
+        &#123;
+            return _endofstorage - _start;
+        &#125;
+        size_t cacpcity()const
+        &#123;
+            return _endofstorage - _start;
+        &#125;
+
+        void reserve(size_t n)
+        &#123;
+            //n比当前容量大
+            if (cacpcity() &lt; n)
+            &#123;
+                //开辟n个空间
+                T* tmp = new T[n];
+                //拷贝
+                for (int i = 0; i &lt; size(); i++)
+                &#123;
+                    *(tmp + i) = *(_start + i);
+                &#125;
+                //更新_finish
+                _finish = tmp + size();
+                //销毁旧空间
+                delete[] _start;
+                //更新
+                _start = tmp;
+                _endofstorage = _start + n;
+            &#125;
+        &#125;
+
+        ////指定位置插入
+        iterator insert(iterator pos, const T&amp; val)
+        &#123;
+            //pos必须在 _start  - _finish之间
+            assert(pos &gt;= _start &amp;&amp; pos &lt;= _finish);
+            //判断空间是否足够
+            if (_finish == _endofstorage)
+            &#123;
+                size_t len = pos - _start;
+                //空间不够，增容，是0增容4，不是0增容2倍
+                reserve(cacpcity() == 0 ? 4 : 2 * cacpcity());
+                pos = _start + len;
+            &#125;
+            //把pos - finish 的位置都往后移动
+            iterator end = _finish;
+            while (end &gt; pos)
+            &#123;
+                *(end) = *(end - 1);
+                --end;
+            &#125;
+            *pos = val;
+            ++_finish;
+            //返回pos迭代器
+            return pos;
+        &#125;
+
+        iterator erase(iterator pos)
+        &#123;
+            //pos必须在start - finish区间，且 size不能为空
+            assert(size() &gt; 0);
+            assert(pos &gt;= _start &amp;&amp; pos &lt; _finish);
+            int len = pos - _start;
+            //从pos的下一个位置开始，往前覆盖
+            iterator begin = pos + 1;
+            while (begin != _finish)
+            &#123;
+                *(begin - 1) = *begin;
+                ++begin;
+            &#125;
+            _finish--;
+
+            return pos;
+        &#125;
+
+        void pop_back()
+        &#123;
+            erase(end() - 1);
+        &#125;
+
+        iterator begin()
+        &#123;
+            return _start;
+        &#125;
+        iterator end()
+        &#123;
+            return _finish;
+        &#125;
+
+        const_iterator begin()const
+        &#123;
+            return _start;
+        &#125;
+        const_iterator end()const
+        &#123;
+            return _finish;
+        &#125;
+        //反向迭代器
+        reverse_iterator rbegin()
+        &#123;
+            return reverse_iterator(_finish);
+        &#125;
+
+        const_reverse_iterator rbegin()const
+        &#123;
+            return const_reverse_iterator(_finish);
+        &#125;
+
+        reverse_iterator rend()
+        &#123;
+            return reverse_iterator(_start);
+        &#125;
+
+        const_reverse_iterator rend()const
+        &#123;
+            return const_reverse_iterator(_start);
+        &#125;
+
+
+        void push_back(const T&amp; val)
+        &#123;
+            //复用insert
+            insert(end(), val);
+        &#125;
+
+    private:
+        iterator _start;
+        iterator _finish;
+        iterator _endofstorage;
+
+    &#125;;
+
+
+    void a(const vector&lt;int&gt;&amp; v)
+    &#123;
+        for (int i = 0; i &lt; v.size(); i++)
+        &#123;
+            //v[i] = 10;
+            cout &lt;&lt; v[i] &lt;&lt; &quot; &quot;;
+        &#125;
+    &#125;
+    void test1()
+    &#123;
+        vector&lt;int&gt; v;
+        v.push_back(1);
+        cout &lt;&lt; v.size() &lt;&lt; &quot;,&quot; &lt;&lt; v.cacpcity() &lt;&lt; endl;
+        v.push_back(2);
+        cout &lt;&lt; v.size() &lt;&lt; &quot;,&quot; &lt;&lt; v.cacpcity() &lt;&lt; endl;
+        v.push_back(3);
+        cout &lt;&lt; v.size() &lt;&lt; &quot;,&quot; &lt;&lt; v.cacpcity() &lt;&lt; endl;
+        v.push_back(4);
+        v.push_back(5);
+        cout &lt;&lt; v.size() &lt;&lt; &quot;,&quot; &lt;&lt; v.cacpcity() &lt;&lt; endl;
+        
+        vector&lt;int&gt;::iterator it = v.begin();
+        //while (it != v.end())
+        //&#123;
+        //	
+        //	cout &lt;&lt; *it &lt;&lt; &quot; &quot;;
+        //	++it;
+        //&#125;
+        for (int i = 0; i &lt; v.size(); i++)
+        &#123;
+            v[i] = 10;
+            cout &lt;&lt; v[i] &lt;&lt; &quot; &quot;;
+        &#125;
+        a(v);
+
+    &#125;
+
+    void test2()
+    &#123;
+        vector&lt;int&gt; v;
+        v.push_back(1);
+        v.push_back(2);
+        v.push_back(3);
+        v.push_back(4);
+        v.push_back(5);
+        //v.erase(v.begin());
+        //v.erase(v.end()-1);
+
+
+        vector&lt;int&gt; v2 = v;
+        vector&lt;int&gt;::reverse_iterator rit = v2.rbegin();
+        while (rit != v2.rend())
+        &#123;
+            
+            cout &lt;&lt; *rit &lt;&lt; &quot; &quot;;
+            ++rit;
+        &#125;
+    &#125;
+    struct Date
+    &#123;
+        int _year;
+        int _month;
+        int _day;
+        Date(int year = 1,int month = 1,int day = 1)
+            :_year(year)
+            ,_month(month)
+            ,_day(day)
+        &#123;&#125;
+    &#125;;
+
+    void b(const vector&lt;Date&gt;&amp; v)
+    &#123;
+        vector&lt;Date&gt;::const_reverse_iterator rit = v.rbegin();
+        while (rit != v.rend())
+        &#123;
+            cout &lt;&lt; rit-&gt;_year &lt;&lt; &quot; &quot; &lt;&lt; rit-&gt;_month &lt;&lt; &quot; &quot; &lt;&lt; rit-&gt;_day &lt;&lt; endl;
+            ++rit;
+        &#125;
+    &#125;
+
+    void test3()
+    &#123;
+        vector&lt;Date&gt; v;
+        v.push_back(Date(2022, 1, 1));
+        v.push_back(Date(2022, 2, 1));
+        v.push_back(Date(2022, 3, 1));
+        b(v);
+
+    &#125;
+&#125;
+</code></pre>
+<p>反向迭代器封装的类的全部代码<br>reverse_iterator.h</p>
+<pre><code class="c">#pragma once
+
+template&lt;class iterator,class Ref,class Ptr&gt;
+class _reverse_iterator
+&#123;
+    typedef _reverse_iterator&lt;iterator, Ref, Ptr&gt; self;
+public:	
+    _reverse_iterator(iterator it)
+        :_it(it)
+    &#123;&#125;
+    //前置++
+    self&amp; operator++()
+    &#123;
+        --_it;
+        return *this;
+    &#125;
+    //后置++
+    self operator++(int)
+    &#123;
+        self tmp(*this);
+        --_it;
+        return tmp;
+    &#125;
+
+    //前置--
+    self&amp; operator--()
+    &#123;
+        ++_it;
+        return *this;
+    &#125;
+    //后置--
+    self operator--(int)
+    &#123;
+        self tmp(*this);
+        ++_it;
+        return tmp;
+    &#125;
+
+    Ref operator*()
+    &#123;
+        iterator tmp = (*this)._it;
+        return *(--tmp);
+    &#125;
+
+    Ptr operator-&gt;()
+    &#123;
+        return &amp;operator*();
+    &#125;
+
+    bool operator!=(const self&amp; it)
+    &#123;
+        return _it != it._it;
+    &#125;
+
+    bool operator!=(const self&amp; it)const
+    &#123;
+        return _it != it._it;
+    &#125;
+
+    bool operator==(const self&amp; it)
+    &#123;
+        return _it == it._it;
+    &#125;
+
+    bool operator==(const self&amp; it)const
+    &#123;
+        return _it == it._it;
+    &#125;
+
+
+private:
+    iterator _it;
+&#125;;
+</code></pre>
+<p>主main函数文件代码<br>test.cpp</p>
+<pre><code class="c">#include&quot;vector.h&quot;
+
+void vectorTest()
+&#123;
+    //wyl::test1();
+    wyl::test3();
+
+&#125;
+
+int main()
+&#123;
+    vectorTest();
+&#125;
+</code></pre>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>代码是跟着博客边写，边测，没问题才写上博客的。而后续还会为大家更新更多关于stl的知识，以及一些容器的模拟实现。而反向迭代器具有复用性，也就是这次实现了，下次模拟实现其他容器时可以直接带进去用。实际中vector的使用频率也很高，手动实现一次vector对学习stl的帮助也非常大。后续会持续为大家更新关于C&#x2F;C++，数据结构以及linux操作系统等知识，如果觉得讲的还可以，可以三连关注一下。如果哪里有写的不对的地方，也欢迎大家指出。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    <div id="comment">
+        <div id="twikoo-container"></div>
+    </div>
+    
+    
+</div>
+
+                <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2023 - 2023 小林的博客
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;林  子
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+            </div>
+            </transition>
+            
+            <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+            </transition>
+            
+        </div>
+        <script src="/js/main.js"></script>
+        
+        
+
+
+
+<script>
+    twikoo.init({
+        el: "#twikoo-container",
+        envId: "",
+        region: "",
+        path: location.pathname,
+        lang: "zh-CN",
+    })
+</script>
+
+
+        
+   
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

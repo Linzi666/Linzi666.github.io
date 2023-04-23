@@ -1,0 +1,353 @@
+
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="utf-8" />
+        <title>C和C++之间的互相调用 | 小林的博客</title>
+        <meta name="author" content="林  子" />
+        <meta name="description" content="烟雨江南中为等你回波一望" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="/images/favicon.png" />
+        <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.3.0/css/all.min.css" />
+<link rel="stylesheet" href="/css/fonts.min.css" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.7.0/highlight.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.7.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.staticfile.org/twikoo/1.6.10/twikoo.all.min.js"></script>
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script> 
+
+<canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+
+<div id="cursor"></div>
+<link rel="stylesheet" href="/css/cursor.min.css" />
+<script src="/js/cursor.min.js"></script>
+
+
+
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="layout">
+            <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+            </transition>
+            <nav id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <div class="desktop-menu">
+        <a class="title" href="/">
+            <span>小林的博客</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;首页</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于我</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;目录</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+        <a href="/books">
+            <i class="fa-solid fa- fa-fw"></i>
+            <span>&ensp;书库</span>
+        </a>
+        
+    </div>
+    <div id="mobile-menu">
+        <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
+        <div class="title" @click="shouMenuItems = !shouMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;小林的博客</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="shouMenuItems">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">首页</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">关于我</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">目录</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                </div>
+            </a>
+            
+            <a href="/books">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa- fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">书库</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+
+            <transition name="into">
+            <div id="main" v-show="!loading">
+                <div class="article">
+    <div>
+        <h1>C和C++之间的互相调用</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/15
+        </span>
+        
+        <span class="category">
+            <a href="/categories/C/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                C++
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/C%E5%92%8CC-%E7%9A%84%E4%BA%92%E7%9B%B8%E8%B0%83%E7%94%A8/" style="color: #00bcd4">C和C++的互相调用</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+         <meta name="referrer" content="no-referrer" />
+
+
+
+
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>我们都知道C和C++是两种语言，C++兼容C。但是有时候我们用C++写了一个程序，想使用C文件里的函数。或者我们用C语言写了一个程序，想调用C++程序里的函数。会发现两者不能互相调用，其实是可以的，这篇文章将会为你揭晓。</p>
+<hr>
+<h1 id="C-调用C"><a href="#C-调用C" class="headerlink" title="C++调用C"></a>C++调用C</h1><p>首先，我们先我们要有2个项目，一个项目以C++程序编译，要调用的项目则是以C程序编译的。<br><br/><br>C++项目:<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949278.png" alt="在这里插入图片描述"></p>
+<br/>
+C程序项目:
+
+<p>需要头文件，头文件是提供给主程序包含的。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949746.png" alt="在这里插入图片描述"></p>
+<br/>
+因为是C++调用C，而一个程序只有一个main函数，所以C项目里是没有main函数的。
+
+<h2 id="生成静态库"><a href="#生成静态库" class="headerlink" title="生成静态库"></a>生成静态库</h2><p>然后，我们需要把C项目生成静态库。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949493.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949039.png" alt="在这里插入图片描述"></p>
+<p>点击确定，然后编译。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949651.png" alt="在这里插入图片描述"></p>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949456.png" alt="在这里插入图片描述"><br>这个lib文件就是Print项目的静态库</p>
+<h2 id="包含头文件"><a href="#包含头文件" class="headerlink" title="包含头文件"></a>包含头文件</h2><p>然后我们把生成的.lib文件和C程序的.h文件移到 C++程序下。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949579.png" alt="在这里插入图片描述"><br>然后包含头文件<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231951040.png" alt="在这里插入图片描述"></p>
+<h2 id="添加依赖库"><a href="#添加依赖库" class="headerlink" title="添加依赖库"></a>添加依赖库</h2><p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949068.png" alt="在这里插入图片描述"><br>把C程序生成的 .lib静态库添加进去<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231951821.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231951519.png" alt="在这里插入图片描述"></p>
+<h2 id="extern"><a href="#extern" class="headerlink" title="extern"></a>extern</h2><p>然后我们需要用extern 来修饰这个头文件。</p>
+<pre><code class="c">
+extern &quot;C&quot; //用C语言的方式编译括号内容
+&#123;
+#include &quot;Print.h&quot;
+&#125;
+
+int main()
+&#123;
+    Print();
+    return  0;
+&#125;
+</code></pre>
+<p>然后我们运行程序<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231949498.png" alt="在这里插入图片描述"></p>
+<p>这样，就成功的使用 CPP程序调用C程序的内容了</p>
+<h1 id="C调用C"><a href="#C调用C" class="headerlink" title="C调用C++"></a>C调用C++</h1><p>C调用和C++ ， 和C++调用C，其实差不多。</p>
+<p>我们把要调用的程序 改成C++程序<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231950028.png" alt="在这里插入图片描述"><br>然后把主程序改成C程序<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231951887.png" alt="在这里插入图片描述"><br>但此时问题了，C 语言里 没有 extern “C”这个用法，这种用法放在C程序里会出错，所以我们把它删掉。</p>
+<pre><code class="c">#define _CRT_SECURE_NO_WARNINGS 1
+
+
+#include &quot;Print.h&quot;
+
+int main()
+&#123;
+    Print();
+    return  0;
+&#125;
+</code></pre>
+<p>然后 打印的内容改成 is C++<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231950235.png" alt="在这里插入图片描述"></p>
+<p>因为CPP程序和C语言程序对函数名的修饰不同，所以我们要用extern 来修饰C++程序里需要调用的函数，<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231950279.png" alt="在这里插入图片描述">但此时问题又来了，.h的头文件会在预处理的时候展开，但是C语言不认识 extern “C”，所以我们可以这样。</p>
+<pre><code class="c">#pragma once
+
+
+#ifdef __cplusplus
+extern &quot;C&quot;
+&#123;
+#endif
+
+void Print();
+
+#ifdef __cplusplus
+&#125;
+#endif
+</code></pre>
+<p>__cplusplus 是一个宏定义，只要在以C++程序编译时，才会有。如果不是以C++程序编译，那么就不会 展开 extern “C”。</p>
+<p>然后我们就可以编译了，生成的是C++程序的静态库<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231950534.png" alt="在这里插入图片描述"></p>
+<p>再把C++的静态库和Print.h 文件 移动到C程序目录<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231950020.png" alt="在这里插入图片描述"></p>
+<p>主程序里也别忘了添加依赖库<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231950714.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231951280.png" alt="在这里插入图片描述"></p>
+<p>这样我们就成功用 C程序调用了C++程序里的函数<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231950251.png" alt="在这里插入图片描述"></p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>无论是C++调用C里面的函数，还是C调用C++里的函数。本质都是一样的，唯一需要注意的是 C语言里面 没有 extern “C” 这种用法。所以C++程序里需要保证，在以C++编译时，变换成以C的方式编译，也就是使用extern “C”。但同时，还需要避免当 .h文件在C文件中展开时， extern “C” 带来的错误。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    <div id="comment">
+        <div id="twikoo-container"></div>
+    </div>
+    
+    
+</div>
+
+                <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2023 - 2023 小林的博客
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;林  子
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+            </div>
+            </transition>
+            
+            <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+            </transition>
+            
+        </div>
+        <script src="/js/main.js"></script>
+        
+        
+
+
+
+<script>
+    twikoo.init({
+        el: "#twikoo-container",
+        envId: "",
+        region: "",
+        path: location.pathname,
+        lang: "zh-CN",
+    })
+</script>
+
+
+        
+   
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
