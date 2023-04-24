@@ -1,0 +1,1183 @@
+
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="utf-8" />
+        <title>C++中list的实现 | 小林的博客</title>
+        <meta name="author" content="林  子" />
+        <meta name="description" content="烟雨江南中为等你回波一望" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="/images/favicon.png" />
+        <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.3.0/css/all.min.css" />
+<link rel="stylesheet" href="/css/fonts.min.css" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.7.0/highlight.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.7.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.staticfile.org/twikoo/1.6.10/twikoo.all.min.js"></script>
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script> 
+
+<canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+
+<div id="cursor"></div>
+<link rel="stylesheet" href="/css/cursor.min.css" />
+<script src="/js/cursor.min.js"></script>
+
+
+
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="layout">
+            <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+            </transition>
+            <nav id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <div class="desktop-menu">
+        <a class="title" href="/">
+            <span>小林的博客</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;首页</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于我</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;目录</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+        <a href="/books">
+            <i class="fa-solid fa- fa-fw"></i>
+            <span>&ensp;书库</span>
+        </a>
+        
+    </div>
+    <div id="mobile-menu">
+        <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
+        <div class="title" @click="shouMenuItems = !shouMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;小林的博客</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="shouMenuItems">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">首页</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">关于我</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">目录</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                </div>
+            </a>
+            
+            <a href="/books">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa- fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">书库</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+
+            <transition name="into">
+            <div id="main" v-show="!loading">
+                <div class="article">
+    <div>
+        <h1>C++中list的实现</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/16
+        </span>
+        
+        <span class="category">
+            <a href="/categories/C/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                C++
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/STL/" style="color: #03a9f4">STL</a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/list/" style="color: #00bcd4">list</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+         <meta name="referrer" content="no-referrer" />
+
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>上次模拟实现了一个vector容器，那么我们这次来实现一个list(链表)容器，链表在实际的开发中并不常见。但是也是一种很重要的数据结构，下面给大家介绍一下链表(list) 和 vector(顺序表)的区别。</p>
+<hr>
+<h1 id="list和vector的区别"><a href="#list和vector的区别" class="headerlink" title="list和vector的区别"></a>list和vector的区别</h1><blockquote>
+<p>list 和 vector 一样，是一个存储容器。不同的是vector在内存中是连续存储的，而list每个节点所在的内存区域是不连续的。那我们用vector还是用list呢？vector和list的优劣势有以下几点。<br><font color="red" size = 3 >vector优点:<br>1.支持下标随机访问。<br>2.cpu命中缓存率高<br>vector缺点:<br>1.存在一定的程度的空间浪费。<br>2.扩容代价大。<br>3.中间和前面元素的删除与插入，代价大。<br><br><br>list优点:<br>1.按需申请空间，不存在空间浪费。<br>2.任意位置的插入与删除，时间复杂度都是O(1)。<br>list缺点:<br>1.不支持随机访问，以至于查找，排序等操作代价太大。<br>2.cpu命中缓存率低。<br><br></font>综上所述，我们可以看到list和vector是完全互补的两个容器。vector的优点就是list的缺点，vector的缺点就是list的优点。所以，如果查找多，用vector，如果增删操作多，用list，了解了list之后，接下来我们就可以模拟实现一下它。</p>
+</blockquote>
+<hr>
+<h1 id="节点的定义"><a href="#节点的定义" class="headerlink" title="节点的定义"></a>节点的定义</h1><p>我们要实现的是一个带头双向循环的链表。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001474.png" alt="在这里插入图片描述"><br>所以节点有三个参数，一个的prve指向前一个节点，一个是date存储数据，还有一个是next指向下一个节点。当然，我们还需要有个构造函数，来给date赋值。</p>
+<p>代码:</p>
+<pre><code class="c">    //节点结构体
+    template&lt;class T&gt;
+    struct ListNode
+    &#123;
+        typedef ListNode&lt;T&gt; Node;
+        Node* _prve;
+        Node* _next;
+        T _data;
+
+        //构造函数
+        ListNode():_prve(nullptr),_next(nullptr),_data(0)&#123;&#125;
+        
+        ListNode(const T&amp; val)
+            :_prve(nullptr)
+            ,_next(nullptr)
+        &#123;
+            _data = val;
+        &#125;
+    &#125;;
+</code></pre>
+<hr>
+<h1 id="list类定义"><a href="#list类定义" class="headerlink" title="list类定义"></a>list类定义</h1><p>list定义很简单，因为要存任意类型的参数，我们用模板即可。<br>而私有成员只有一个，那就是头节点。</p>
+<p>代码:</p>
+<pre><code class="c">    template&lt;class T&gt;
+    class list
+    &#123;
+        typedef ListNode&lt;T&gt; Node;
+    public:
+        //构造函数
+        list()
+        &#123;
+            //开辟空间
+            _head = new Node;
+            //自己指向自己
+            _head-&gt;_prve = _head;
+            _head-&gt;_next = _head;
+        &#125;
+    private:
+        Node* _head;
+    &#125;;
+</code></pre>
+<hr>
+<h1 id="push-back函数"><a href="#push-back函数" class="headerlink" title="push_back函数"></a>push_back函数</h1><p>push_back函数也就是尾部插入，我们可以通过头节点的prev找到最后一个节点，随后链接即可。</p>
+<p>代码:</p>
+<pre><code class="c">        void push_back(const T&amp; val)
+        &#123;
+            //创建一个新节点
+            Node* newNode = new Node(val);
+            //找到尾节点
+            Node* tail = _head-&gt;_prve;
+            //尾节点和创建的节点链接
+            tail-&gt;_next = newNode;
+            newNode-&gt;_prve = tail;
+            _head-&gt;_prve = newNode;
+            newNode-&gt;_next = _head;
+        &#125;
+</code></pre>
+<hr>
+<h1 id="push-front函数"><a href="#push-front函数" class="headerlink" title="push_front函数"></a>push_front函数</h1><p>就是头插，很简单，直接保存节点的下一个节点，然后创建一个新节点。把这俩节点链接起来。</p>
+<p>代码:</p>
+<pre><code class="c">        void push_front(const T&amp; val)
+        &#123;
+            //创建一个新节点
+            Node* newNode = new Node(val);
+            //保存头节点的下一个节点
+            Node* next = _head-&gt;_next;
+            //链接
+            _head-&gt;_next = newNode;
+            newNode-&gt;_prve = _head;
+            next-&gt;_prve = newNode;
+            newNode-&gt;_next = next;
+        &#125;
+</code></pre>
+<h1 id="迭代器"><a href="#迭代器" class="headerlink" title="迭代器"></a>迭代器</h1><p>因为是链表容器，链表在内存中的存储不是连续的，所以迭代器+1是无法找到下一个节点的。所以我们要单独弄一个结构体来封装list的迭代器。</p>
+<p>代码:</p>
+<pre><code class="c">    template&lt;class T&gt;
+    struct_list_iterator
+    &#123;
+        Node* _it;
+        typedef ListNode&lt;T&gt; Node;
+        // 构造函数
+        _list_iterator(Node* node)
+            :_it(node)
+        &#123;	
+        &#125;
+
+    &#125;;
+</code></pre>
+<hr>
+<h1 id="begin和end函数"><a href="#begin和end函数" class="headerlink" title="begin和end函数"></a>begin和end函数</h1><p>我们的链表是带头的，也就是头节点是不存放有效值的，所以头节点的_next指向的节点就是链表的第一个节点。而最后一个节点的下一个节点又恰好是头节点。所以迭代器开始位置是在头节点的下一个位置，结束位置是头节点。不过再此之前，我们需要把迭代器typedef一下。</p>
+<p>代码:</p>
+<pre><code class="c">        //迭代器
+        typedef _list_iterator&lt;T&gt; iterator;
+        typedef _list_iterator&lt;const T&gt; const_iterator;
+        //迭代器获取
+        iterator begin()
+        &#123;
+            return iterator(_head-&gt;_next);
+        &#125;
+
+        const_iterator begin()const
+        &#123;
+            return const_iterator(_head-&gt;_next);
+        &#125;
+
+        iterator end()
+        &#123;
+            return iterator(_head);
+        &#125;
+
+        const_iterator end()const
+        &#123;
+            return const_iterator(_head);
+        &#125;
+</code></pre>
+<h1 id="迭代器区间初始化"><a href="#迭代器区间初始化" class="headerlink" title="迭代器区间初始化"></a>迭代器区间初始化</h1><p>有了迭代器之后，我们可以用迭代器区间来进行初始化。</p>
+<p>代码:</p>
+<pre><code class="c">        template&lt;class InputIterator&gt;
+        list(InputIterator first, InputIterator last)
+        &#123;
+            //创建头节点
+            _head = new Node();
+            _head-&gt;_prve = _head;
+            _head-&gt;_next = _head;
+
+            while (first != last)
+            &#123;
+                pusb_back(*first);
+                ++first;
+            &#125;
+        &#125;
+</code></pre>
+<h1 id="迭代器的操作符重载"><a href="#迭代器的操作符重载" class="headerlink" title="迭代器的操作符重载"></a>迭代器的操作符重载</h1><p>接下来我们来完善迭代器的一些操作。</p>
+<h2 id="操作符-重载"><a href="#操作符-重载" class="headerlink" title="操作符++重载"></a>操作符++重载</h2><p>迭代器++，就是指向下一个元素。</p>
+<pre><code class="c">        typedef _list_iterator&lt;T&gt; self;
+        //前置++重载
+        self&amp; operator++()
+        &#123;
+            _it = _it-&gt;_next;
+            return *this;
+        &#125;
+        //后置++重载
+        self operator++(int)
+        &#123;
+            self tmp(*this);
+            _it = _it-&gt;_next;
+            return tmp;
+        &#125;
+</code></pre>
+<h2 id="操作符-重载-1"><a href="#操作符-重载-1" class="headerlink" title="操作符- -重载"></a>操作符- -重载</h2><p>和++类似，不过- -是到前一个节点。</p>
+<pre><code class="c">        //前置--重载
+        self&amp; operator--()
+        &#123;
+            _it = _it-&gt;_prve;
+            return *this;
+        &#125;
+
+        //后置--重载
+        self operator--(int)
+        &#123;
+            self tmp(*this);
+            _it = _it-&gt;_prve;
+            return tmp;
+        &#125;
+</code></pre>
+<h2 id="操作符！-x3D-重载"><a href="#操作符！-x3D-重载" class="headerlink" title="操作符！&#x3D;重载"></a>操作符！&#x3D;重载</h2><p>直接比较地址即可。</p>
+<pre><code class="c">    // !=重载
+        bool operator!=(const self&amp; it)const
+        &#123;
+            return _it != it._it;
+        &#125;
+</code></pre>
+<h2 id="操作符-x3D-x3D-重载"><a href="#操作符-x3D-x3D-重载" class="headerlink" title="操作符&#x3D;&#x3D;重载"></a>操作符&#x3D;&#x3D;重载</h2><p>直接比较地址即可。</p>
+<pre><code class="c">    // ==重载
+        bool operator==(const self&amp; it)const
+        &#123;
+            return _it == it._it;
+        &#125;
+</code></pre>
+<h2 id="操作符-重载-2"><a href="#操作符-重载-2" class="headerlink" title="操作符*重载"></a>操作符*重载</h2><p>*就是解引用，所以我们返回节点的值即可。</p>
+<pre><code class="c">        T&amp; operator*()
+        &#123;
+            return _it-&gt;_data;
+        &#125;
+</code></pre>
+<p>但是这个代码有个缺陷，那就是当容器是const的时候，依旧可以解引用修改它的值，这也就意味着const迭代器根本就不具有常属性，要想const迭代具备常属性，我们必须增加模板参数。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001103.png" alt="在这里插入图片描述"><br>当容器是const的时候，返回的const迭代器必须具有常属性。所以我们要加一个模板参数作为返回值。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001026.png" alt="在这里插入图片描述"></p>
+<p>然后list里面typedef的类型也修改一下。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001403.png" alt="在这里插入图片描述"><br>然后我们解引用时，返回Ref这个模板参数<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001236.png" alt="在这里插入图片描述"><br>这样，我们就让const的迭代器具备了常属性<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001019.png" alt="在这里插入图片描述"><br>迭代器结构体的所有代码:</p>
+<pre><code class="c">//迭代器
+    template&lt;class T,class Ref&gt;
+    struct _list_iterator
+    &#123;
+    
+        typedef ListNode&lt;T&gt; Node;
+        typedef _list_iterator&lt;T,Ref&gt; self;
+        Node* _it;
+        // 构造函数
+        _list_iterator(Node* node)
+            :_it(node)&#123;&#125;
+        //前置++重载
+        self&amp; operator++()
+        &#123;
+            _it = _it-&gt;_next;
+            return *this;
+        &#125;
+
+        //后置++重载
+        self operator++(int)
+        &#123;
+            self tmp(*this);
+            _it = _it-&gt;_next;
+            return tmp;
+        &#125;
+
+        //前置--重载
+        self&amp; operator--()
+        &#123;
+            _it = _it-&gt;_prve;
+            return *this;
+        &#125;
+
+        //后置--重载
+        self operator--(int)
+        &#123;
+            self tmp(*this);
+            _it = _it-&gt;_prve;
+            return tmp;
+        &#125;
+        // *重载
+        Ref operator*()
+        &#123;
+            return _it-&gt;_data;
+        &#125;
+        // !=重载
+        bool operator!=(const self&amp; it)const
+        &#123;
+            return _it != it._it;
+        &#125;
+        // ==重载
+        bool operator==(const self&amp; it)const
+        &#123;
+            return _it == it._it;
+        &#125;
+
+    &#125;;
+</code></pre>
+<h1 id="insert函数"><a href="#insert函数" class="headerlink" title="insert函数"></a>insert函数</h1><p>insert函数是在指定位置插入一个节点，那么我们可以用迭代器来接收这个要插入的位置。</p>
+<pre><code class="c">        //插入节点
+        iterator insert(iterator pos, const T&amp; val)
+        &#123;
+            assert(pos._it);
+            //保存pos的前一个位置
+            Node* cru = pos._it;
+            Node* prve = cru-&gt;_prve;
+            //创建节点
+            Node* newNode = new Node(val);
+            //链接
+            prve-&gt;_next = newNode;
+            newNode-&gt;_prve = prve;
+            newNode-&gt;_next = cru;
+            cru-&gt;_prve = newNode;
+
+            return pos;
+        &#125;
+</code></pre>
+<h1 id="erase函数"><a href="#erase函数" class="headerlink" title="erase函数"></a>erase函数</h1><p>指定位置删除节点，删除节点会影响迭代器失效，所以要返回一个有效的迭代器。删除操作也十分简单，保存前一个节点的地址和后一个地址的节点，然后链接这2个节点，之后释放pos节点。</p>
+<pre><code class="c">        iterator erase(iterator pos)
+        &#123;
+            assert(pos._it);
+            Node* cru = pos._it;
+            Node* prve = cru-&gt;_prve;
+            Node* next = cru-&gt;_next;
+            //链接
+            prve-&gt;_next = next;
+            next-&gt;_prve = prve;
+            //释放cru
+            delete cru;
+            return next;
+        &#125;
+        
+</code></pre>
+<h1 id="pop-back函数"><a href="#pop-back函数" class="headerlink" title="pop_back函数"></a>pop_back函数</h1><p>就是尾删，我们可以直接复用erase</p>
+<pre><code class="c">        void pop_back()
+        &#123;
+            erase(end());
+        &#125;
+</code></pre>
+<p>当然，push_back也可以复用inset</p>
+<h1 id="pop-front"><a href="#pop-front" class="headerlink" title="pop_front"></a>pop_front</h1><p>就是头删，还是复用erase。头插也可以复用insert</p>
+<pre><code class="c">        void pop_front()
+        &#123;
+            erase(begin());
+        &#125;
+</code></pre>
+<h1 id="析构函数"><a href="#析构函数" class="headerlink" title="析构函数"></a>析构函数</h1><p>链表的基本功能已经实现完了，但是当我们链表不用的时候，申请的空间必须销毁。而自带的析构函数不会销毁动态申请的空间，需要我们自己写析构函数销毁。</p>
+<p>代码:</p>
+<pre><code class="c">//析构函数
+        ~list()
+        &#123;
+            //清空链表
+            clear();
+            //释放头节点
+            delete _head;
+            _head = nullptr;
+        &#125;
+
+        void clear()
+        &#123;
+            //除了头节点外，其他都释放。
+            iterator it = begin();
+            while (it != end())
+            &#123;
+                //保存下一个位置的地址
+                iterator next = it++;
+                delete next._it;
+            &#125;
+            //释放完之后，头节点指向的是个野指针，所以我们让它指向自己
+            _head-&gt;_next = _head;
+            _head-&gt;_prve = _head;
+        &#125;
+</code></pre>
+<h1 id="拷贝构造函数"><a href="#拷贝构造函数" class="headerlink" title="拷贝构造函数"></a>拷贝构造函数</h1><p>那么我们想拷贝链表呢？我们可以直接用迭代器区间去创建一个新的对象，然后把新对象的头节点成员和旧对象进行交换。出了函数创建的对象会自动调用析构函数释放空间。</p>
+<pre><code class="c">//拷贝构造
+        list(const list&lt;T&gt;&amp; l1)
+        &#123;
+            //创建头节点
+            _head = new Node();
+            _head-&gt;_prve = _head;
+            _head-&gt;_next = _head;
+            //创建新对象，利用迭代器区间
+            list&lt;T&gt; tmp(l1.begin(), l1.end());
+            //随后交换新对象和旧对象的成员
+            swap(_head, tmp._head);
+        &#125;
+</code></pre>
+<h1 id="赋值操作符重载"><a href="#赋值操作符重载" class="headerlink" title="赋值操作符重载"></a>赋值操作符重载</h1><p>我们可以利用拷贝构造创建一个新对象，然后交换头节点。函数结束，创建的对象自动析构。</p>
+<p>代码:</p>
+<pre><code class="c">list&lt;T&gt;&amp; operator=(const list&lt;T&gt;&amp; l1)
+        &#123;
+            list&lt;T&gt; tmp(l1);
+            swap(_head, tmp._head);
+            return *this;
+        &#125;
+</code></pre>
+<h1 id="迭代器优化"><a href="#迭代器优化" class="headerlink" title="迭代器优化"></a>迭代器优化</h1><p>我们的迭代器还不够完美，因为如果list装的是自定义类型的话，我们还需要让迭代器支持 -&gt;访问。期望它返回一个对象的指针回来，然后该对象的指针可以-&gt;直接访问成员。所以我们还需要增加模板参数。</p>
+<p>增加一个指针参数<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001367.png" alt="在这里插入图片描述"><br>链表里的迭代器调整。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001209.png" alt="在这里插入图片描述"><br>然后重载 迭代器的-&gt;操作符</p>
+<pre><code class="c">        Ptr operator-&gt;()
+        &#123;
+            //返回对象的指针
+            return &amp;(_it-&gt;_data);
+        &#125;
+</code></pre>
+<p>可以直接支持-&gt;访问<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232002306.png" alt="在这里插入图片描述"></p>
+<h1 id="反向迭代器"><a href="#反向迭代器" class="headerlink" title="反向迭代器"></a>反向迭代器</h1><p>之前在vector实现的时候，我们实现过反向迭代器。<a target="_blank" rel="noopener" href="http://t.csdn.cn/JXwKh">vector实现链接</a>。所以我们可以复用这个反向迭代器。</p>
+<p>首先，包上反向迭代器的头文件名。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001747.png" alt="在这里插入图片描述"><br>其次，我们typedef 2个反向迭代器<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232001173.png" alt="在这里插入图片描述"></p>
+<p>随后用rbegin函数和rend函数获取迭代器的开始和结束位置。<br>begin返回的是从头节点的下一个节点，所以rend就是返回头节点的下一个位置。<br>end返回的是头节点，所以rbegin返回头节点。</p>
+<p>代码:</p>
+<pre><code class="c">        //反向迭代器获取
+        reverse_iterator rbegin()
+        &#123;
+            return reverse_iterator(end());
+        &#125;
+
+        reverse_iterator rend()
+        &#123;
+            return reverse_iterator(begin());
+        &#125;
+
+        const_reverse_iterator rbegin()const
+        &#123;
+            return reverse_const_iterator(end());
+        &#125;
+
+        const_reverse_iterator rend()const
+        &#123;
+            return reverse_const_iterator(begin());
+        &#125;
+</code></pre>
+<p>全部代码:<br>list.h代码</p>
+<pre><code class="c">#pragma once
+#include &quot;reverse_iterator.h&quot;
+
+namespace wyl
+&#123;
+    //节点结构体
+    template&lt;class T&gt;
+    struct ListNode
+    &#123;
+        typedef ListNode&lt;T&gt; Node;
+        Node* _prve;
+        Node* _next;
+        T _data;
+
+        //构造函数
+        ListNode():_prve(nullptr),_next(nullptr),_data(0)&#123;&#125;
+
+        ListNode(const T&amp; val)
+            :_prve(nullptr)
+            ,_next(nullptr)
+        &#123;
+            _data = val;
+        &#125;
+    &#125;;
+
+    //迭代器
+    template&lt;class T,class Ref,class Ptr&gt;
+    struct _list_iterator
+    &#123;
+    
+        typedef ListNode&lt;T&gt; Node;
+        typedef _list_iterator&lt;T,Ref,Ptr&gt; self;
+        Node* _it;
+        // 构造函数
+        _list_iterator(Node* node)
+            :_it(node)&#123;&#125;
+        //前置++重载
+        self&amp; operator++()
+        &#123;
+            _it = _it-&gt;_next;
+            return *this;
+        &#125;
+
+        //后置++重载
+        self operator++(int)
+        &#123;
+            self tmp(*this);
+            _it = _it-&gt;_next;
+            return tmp;
+        &#125;
+
+        //前置--重载
+        self&amp; operator--()
+        &#123;
+            _it = _it-&gt;_prve;
+            return *this;
+        &#125;
+
+        //后置--重载
+        self operator--(int)
+        &#123;
+            self tmp(*this);
+            _it = _it-&gt;_prve;
+            return tmp;
+        &#125;
+        // *重载
+        Ref operator*()
+        &#123;
+            return _it-&gt;_data;
+        &#125;
+        // !=重载
+        bool operator!=(const self&amp; it)const
+        &#123;
+            return _it != it._it;
+        &#125;
+        // ==重载
+        bool operator==(const self&amp; it)const
+        &#123;
+            return _it == it._it;
+        &#125;
+
+        Ptr operator-&gt;()
+        &#123;
+            //返回对象的指针
+            return &amp;(_it-&gt;_data);
+        &#125;
+
+    &#125;;
+
+    template&lt;class T&gt;
+    class list
+    &#123;
+        typedef ListNode&lt;T&gt; Node;
+        
+    public:
+        //迭代器
+        typedef _list_iterator&lt;T,T&amp;,T*&gt; iterator;
+        typedef _list_iterator&lt;T,const T&amp;,const T*&gt; const_iterator;
+        //反向迭代器
+        typedef _reverse_iterator&lt;iterator, T&amp;, T*&gt; reverse_iterator;
+        typedef _reverse_iterator&lt;const_iterator, const T&amp;, const T*&gt; const_reverse_iterator;
+
+        //构造函数
+        list()
+        &#123;
+            //开辟空间
+            _head = new Node();
+            //自己指向自己
+            _head-&gt;_prve = _head;
+            _head-&gt;_next = _head;
+        &#125;
+        //迭代器区间初始化
+        template&lt;class InputIterator&gt;
+        list(InputIterator first, InputIterator last)
+        &#123;
+            //创建头节点
+            _head = new Node();
+            _head-&gt;_prve = _head;
+            _head-&gt;_next = _head;
+
+            while (first != last)
+            &#123;
+                push_back(*first);
+                ++first;
+            &#125;
+        &#125;
+        //拷贝构造
+        list(const list&lt;T&gt;&amp; l1)
+        &#123;
+            //创建头节点
+            _head = new Node();
+            _head-&gt;_prve = _head;
+            _head-&gt;_next = _head;
+            //创建新对象，利用迭代器区间
+            list&lt;T&gt; tmp(l1.begin(), l1.end());
+            //随后交换新对象和旧对象的成员
+            swap(_head, tmp._head);
+        &#125;
+        list&lt;T&gt;&amp; operator=(const list&lt;T&gt;&amp; l1)
+        &#123;
+            list&lt;T&gt; tmp(l1);
+            swap(_head, tmp._head);
+            return *this;
+        &#125;
+
+        //析构函数
+        ~list()
+        &#123;
+            //清空链表
+            clear();
+            //释放头节点
+            delete _head;
+            _head = nullptr;
+        &#125;
+
+        void clear()
+        &#123;
+            //除了头节点外，其他都释放。
+            iterator it = begin();
+            while (it != end())
+            &#123;
+                //保存下一个位置的地址
+                iterator next = it++;
+                delete next._it;
+            &#125;
+            //释放完之后，头节点指向的是个野指针，所以我们让它指向自己
+            _head-&gt;_next = _head;
+            _head-&gt;_prve = _head;
+        &#125;
+
+        void push_back(const T&amp; val)
+        &#123;
+            //创建一个新节点
+            Node* newNode = new Node(val);
+            //找到尾节点
+            Node* tail = _head-&gt;_prve;
+            //尾节点和创建的节点链接
+            tail-&gt;_next = newNode;
+            newNode-&gt;_prve = tail;
+            _head-&gt;_prve = newNode;
+            newNode-&gt;_next = _head;
+        &#125;
+
+        void push_front(const T&amp; val)
+        &#123;
+            //创建一个新节点
+            Node* newNode = new Node(val);
+            //保存头节点的下一个节点
+            Node* next = _head-&gt;_next;
+            //链接
+            _head-&gt;_next = newNode;
+            newNode-&gt;_prve = _head;
+            next-&gt;_prve = newNode;
+            newNode-&gt;_next = next;
+        &#125;
+
+
+
+        //迭代器获取
+        iterator begin()
+        &#123;
+            return iterator(_head-&gt;_next);
+        &#125;
+
+        const_iterator begin()const
+        &#123;
+            return const_iterator(_head-&gt;_next);
+        &#125;
+
+        iterator end()
+        &#123;
+            return iterator(_head);
+        &#125;
+
+        const_iterator end()const
+        &#123;
+            return const_iterator(_head);
+        &#125;
+
+        //反向迭代器获取
+        reverse_iterator rbegin()
+        &#123;
+            return reverse_iterator(end());
+        &#125;
+
+        reverse_iterator rend()
+        &#123;
+            return reverse_iterator(begin());
+        &#125;
+
+        const_reverse_iterator rbegin()const
+        &#123;
+            return const_reverse_iterator(end());
+        &#125;
+
+        const_reverse_iterator rend()const
+        &#123;
+            return const_reverse_iterator(begin());
+        &#125;
+
+
+        //插入节点
+        iterator insert(iterator pos, const T&amp; val)
+        &#123;
+            assert(pos._it);
+            //保存pos的前一个位置
+            Node* cru = pos._it;
+            Node* prve = cru-&gt;_prve;
+            //创建节点
+            Node* newNode = new Node(val);
+            //链接
+            prve-&gt;_next = newNode;
+            newNode-&gt;_prve = prve;
+            newNode-&gt;_next = cru;
+            cru-&gt;_prve = newNode;
+
+            return pos;
+        &#125;
+
+        iterator erase(iterator pos)
+        &#123;
+            assert(pos._it);
+            Node* cru = pos._it;
+            Node* prve = cru-&gt;_prve;
+            Node* next = cru-&gt;_next;
+            //链接
+            prve-&gt;_next = next;
+            next-&gt;_prve = prve;
+            //释放cru
+            delete cru;
+            return next;
+        &#125;
+        
+        void pop_back()
+        &#123;
+            erase(end());
+        &#125;
+
+        void pop_front()
+        &#123;
+            erase(begin());
+        &#125;
+
+    private:
+        Node* _head;
+    &#125;;
+
+
+    //--------------------------------------------------------------------------------------------
+    //以下是测试内容
+
+    void listTest1()
+    &#123;
+        list&lt;int&gt; l;
+        l.push_back(1);
+        l.push_back(2);
+        l.push_back(3);
+        l.push_front(30);
+        l.push_front(20);
+        l.push_front(10);
+    &#125;
+
+    void a(const list&lt;int&gt;&amp; l)
+    &#123;
+        list&lt;int&gt;::const_iterator it = l.begin();
+        while (it != l.end())
+        &#123;
+            //*it = 5;
+            cout &lt;&lt; *it &lt;&lt; &quot; &quot;;
+            it++;
+        &#125;
+    &#125;
+
+    void listTest2()
+    &#123;
+        list&lt;int&gt; l;
+        l.push_back(1);
+        l.push_back(2);
+        l.push_back(3);
+        list&lt;int&gt;::iterator it = l.begin();
+        while (it != l.end())
+        &#123;
+            *it = 55;
+            cout &lt;&lt; *it &lt;&lt; &quot; &quot;;
+            ++it;
+        &#125;
+        //a(l);
+    &#125;
+
+    void listTest3()
+    &#123;
+        list&lt;int&gt; l;
+        l.push_back(1);
+        l.push_back(2);
+        l.push_back(4);
+        l.push_back(5);
+        l.insert(l.begin(),100);
+        l.insert(l.end(), 10);
+
+        list&lt;int&gt;::iterator it = l.begin();
+        while (it != l.end())
+        &#123;
+            if (*it % 2 == 0)
+            &#123;
+                it = l.erase(it);
+            &#125;
+            else
+                ++it;
+        &#125;
+        it = l.begin();
+        while (it != l.end())
+        &#123;
+            cout &lt;&lt; *it &lt;&lt; &quot; &quot;;
+            ++it;
+        &#125;
+    &#125;
+
+    void listTest4()
+    &#123;
+        list&lt;int&gt; l;
+        l.push_back(1);
+        l.push_back(2);
+        l.push_back(4);
+        l.push_back(5);
+        l.clear();
+        l.push_back(1);
+        l.push_back(2);
+        l.push_back(4); 
+        l.push_back(5);
+        list&lt;int&gt; l2 = l;
+        list&lt;int&gt;::iterator it = l2.begin();
+        while (it != l2.end())
+        &#123;
+            cout &lt;&lt; *it &lt;&lt; &quot; &quot;;
+            ++it;
+        &#125;
+    &#125;
+
+
+    void listTest5()
+    &#123;
+        list&lt;Date&gt; l;
+        l.push_back(Date(2022, 1, 3));
+        l.push_back(Date(2022, 1, 4));
+        l.push_back(Date(2022, 1, 5));
+
+        list&lt;Date&gt;::iterator it = l.begin();
+        while (it != l.end())
+        &#123;
+            cout &lt;&lt; it-&gt;_year &lt;&lt; &quot;/&quot;&lt;&lt;it-&gt;_month&lt;&lt;&quot;/&quot;&lt;&lt;it-&gt;_day&lt;&lt;endl;
+            ++it;
+        &#125;
+
+    &#125;
+
+    void listTest6()
+    &#123;
+        list&lt;Date&gt; l;
+        l.push_back(Date(2022, 1, 3));
+        l.push_back(Date(2022, 1, 4));
+        l.push_back(Date(2022, 1, 5));
+
+        list&lt;Date&gt;::reverse_iterator it = l.rbegin();
+        while (it != l.rend())
+        &#123;
+            cout &lt;&lt; it-&gt;_year &lt;&lt; &quot;/&quot; &lt;&lt; it-&gt;_month &lt;&lt; &quot;/&quot; &lt;&lt; it-&gt;_day &lt;&lt; endl;
+            ++it;
+        &#125;
+
+    &#125;
+
+&#125;
+</code></pre>
+<p>反向迭代器代码:<br>reverse_iterator.h</p>
+<pre><code class="c">#pragma once
+
+template&lt;class iterator,class Ref,class Ptr&gt;
+class _reverse_iterator
+&#123;
+    typedef _reverse_iterator&lt;iterator, Ref, Ptr&gt; self;
+public:	
+    _reverse_iterator(iterator it)
+        :_it(it)
+    &#123;&#125;
+    //前置++
+    self&amp; operator++()
+    &#123;
+        --_it;
+        return *this;
+    &#125;
+    //后置++
+    self operator++(int)
+    &#123;
+        self tmp(*this);
+        --_it;
+        return tmp;
+    &#125;
+
+    //前置--
+    self&amp; operator--()
+    &#123;
+        ++_it;
+        return *this;
+    &#125;
+    //后置--
+    self operator--(int)
+    &#123;
+        self tmp(*this);
+        ++_it;
+        return tmp;
+    &#125;
+
+    Ref operator*()
+    &#123;
+        iterator tmp = (*this)._it;
+        return *(--tmp);
+    &#125;
+
+    Ptr operator-&gt;()
+    &#123;
+        return &amp;operator*();
+    &#125;
+
+    bool operator!=(const self&amp; it)
+    &#123;
+        return _it != it._it;
+    &#125;
+
+    bool operator!=(const self&amp; it)const
+    &#123;
+        return _it != it._it;
+    &#125;
+
+    bool operator==(const self&amp; it)
+    &#123;
+        return _it == it._it;
+    &#125;
+
+    bool operator==(const self&amp; it)const
+    &#123;
+        return _it == it._it;
+    &#125;
+
+
+private:
+    iterator _it;
+&#125;;
+</code></pre>
+<p>主程序代码:</p>
+<pre><code class="c">#include&quot;list.h&quot;
+void listTest()
+&#123;
+    //wyl::listTest2();
+    //wyl::listTest3();
+    //wyl::listTest4();
+    //wyl::listTest5();
+    wyl::listTest6();
+
+&#125;
+
+int main()
+&#123;
+    listTest();
+
+&#125;
+</code></pre>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结:"></a>总结:</h1><p>list的实现，其实最主要的部分还是迭代器。list的迭代器是比较特殊的，因为list在内存中不是连续存储的。以上代码都是我边打，边测试，没问题了才会发出来。如果有什么没测试到的错误，欢迎大家指出。以后会持续为大家更新STL的内容，以及数据结构，C语言，linux等方面的内容。感谢大家的支持，如果感觉写的还不错，麻烦给个三连嘛。我会多多努力的！</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    <div id="comment">
+        <div id="twikoo-container"></div>
+    </div>
+    
+    
+</div>
+
+                <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2023 - 2023 小林的博客
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;林  子
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+            </div>
+            </transition>
+            
+            <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+            </transition>
+            
+        </div>
+        <script src="/js/main.js"></script>
+        
+        
+
+
+
+<script>
+    twikoo.init({
+        el: "#twikoo-container",
+        envId: "",
+        region: "",
+        path: location.pathname,
+        lang: "zh-CN",
+    })
+</script>
+
+
+        
+   
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>

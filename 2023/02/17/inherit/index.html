@@ -1,0 +1,738 @@
+
+<!DOCTYPE html>
+<html lang="ch">
+    <head>
+        <meta charset="utf-8" />
+        <title>C++的继承原理 | 小林的博客</title>
+        <meta name="author" content="林  子" />
+        <meta name="description" content="烟雨江南中为等你回波一望" />
+        <meta name="keywords" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+        <link rel="icon" href="/images/favicon.png" />
+        <script src="https://cdn.staticfile.org/vue/3.2.47/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/6.3.0/css/all.min.css" />
+<link rel="stylesheet" href="/css/fonts.min.css" />
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://cdn.staticfile.org/highlight.js/11.7.0/highlight.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://cdn.staticfile.org/highlight.js/11.7.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+<script src="https://cdn.staticfile.org/twikoo/1.6.10/twikoo.all.min.js"></script>
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+
+    <canvas
+    id="fireworks"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"
+></canvas>
+<script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+<script src="/js/fireworks.min.js"></script> 
+
+<canvas
+    id="background"
+    style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"
+></canvas>
+<script src="/js/background.min.js"></script>
+
+<div id="cursor"></div>
+<link rel="stylesheet" href="/css/cursor.min.css" />
+<script src="/js/cursor.min.js"></script>
+
+
+
+    <meta name="generator" content="Hexo 6.3.0"></head>
+    <body>
+        <div id="layout">
+            <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+            </transition>
+            <nav id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <div class="desktop-menu">
+        <a class="title" href="/">
+            <span>小林的博客</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;首页</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;关于我</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;归档</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;目录</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;标签</span>
+        </a>
+        
+        <a href="/books">
+            <i class="fa-solid fa- fa-fw"></i>
+            <span>&ensp;书库</span>
+        </a>
+        
+    </div>
+    <div id="mobile-menu">
+        <div class="curtain" @click="shouMenuItems = !shouMenuItems" v-show="shouMenuItems"></div>
+        <div class="title" @click="shouMenuItems = !shouMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;小林的博客</span>
+        </div>
+        <transition name="slide">
+        <div class="items" v-show="shouMenuItems">
+            
+            <a href="/">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-house fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">首页</div>
+                </div>
+            </a>
+            
+            <a href="/about">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-id-card fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">关于我</div>
+                </div>
+            </a>
+            
+            <a href="/archives">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-box-archive fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">归档</div>
+                </div>
+            </a>
+            
+            <a href="/categories">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-bookmark fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">目录</div>
+                </div>
+            </a>
+            
+            <a href="/tags">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa-tags fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">标签</div>
+                </div>
+            </a>
+            
+            <a href="/books">
+                <div class="item">
+                    <div style="min-width: 20px; max-width: 50px; width: 10%">
+                        <i class="fa-solid fa- fa-fw"></i>
+                    </div>
+                    <div style="min-width: 100px; max-width: 150%; width: 20%">书库</div>
+                </div>
+            </a>
+            
+        </div>
+        </transition>
+    </div>
+</nav>
+
+            <transition name="into">
+            <div id="main" v-show="!loading">
+                <div class="article">
+    <div>
+        <h1>C++的继承原理</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2023/2/17
+        </span>
+        
+        <span class="category">
+            <a href="/categories/C/">
+                <span class="icon">
+                    <i class="fa-solid fa-bookmark fa-fw"></i>
+                </span>
+                C++
+            </a>
+        </span>
+        
+        
+        <span class="tags">
+            <span class="icon">
+                <i class="fa-solid fa-tags fa-fw"></i>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E7%BB%A7%E6%89%BF/" style="color: #03a9f4">继承</a>
+            </span>
+            
+            <span class="tag">
+                
+                <a href="/tags/%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" style="color: #ffa2c4">面向对象</a>
+            </span>
+            
+        </span>
+        
+    </div>
+    
+    <div class="content" v-pre>
+         <meta name="referrer" content="no-referrer" />
+
+
+
+<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>继承是面向对象的一个重点，而继承和多态也息息相关。继承继承，顾名思义，就是继承父亲的所有。现实中有继承，那么C++里面也有继承。所以说，程序实际上就是对现实世界的抽象。废话不多说，接下来步入正题。</p>
+<hr>
+<h1 id="继承的定义及概念"><a href="#继承的定义及概念" class="headerlink" title="继承的定义及概念"></a>继承的定义及概念</h1><blockquote>
+<p>继承(inheritance)机制是面向对象程序设计使代码可以复用的最重要的手段，它允许程序员在保<br>持原有类特性的基础上进行扩展，增加功能，这样产生新的类，称派生类。继承呈现了面向对象<br>程序设计的层次结构，体现了由简单到复杂的认知过程。以前我们接触的复用都是函数复用，继<br>承是类设计层次的复用。</p>
+</blockquote>
+<p>那么继承如何定义呢？ 很简单，继承的定义格式<code>class 类名 : 继承方式(public/protected/private) 基类类名。 </code><br>代码演示:<br>首先我们需要有一个基类，我暂且把基类的成员设置为公有。</p>
+<pre><code class="c">class Person
+&#123;
+public:
+    string _name;
+&#125;;
+</code></pre>
+<p>其次我们需要一个派生类，来继承基类。我们的基类是Person，那我们再定义一个Student类，来继承Person。</p>
+<p>Student定义:</p>
+<pre><code class="c">class Student : public Person
+&#123;
+public:
+    int _num;
+&#125;;
+</code></pre>
+<p>这样，Student类和Person类就完成了继承关系。Student 就是Person的子类。但这也不意味着子类就可以使用父类的成员了。因为C++中的继承方式有9种。</p>
+<hr>
+<h1 id="继承方式"><a href="#继承方式" class="headerlink" title="继承方式"></a>继承方式</h1><p>C++中的继承方式有以下9种。</p>
+<table>
+<thead>
+<tr>
+<th>类成员&#x2F;继承方式</th>
+<th>public方式继承</th>
+<th>protected方式继承</th>
+<th>private方式继承</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>基类的public成员</td>
+<td>在派生类中是public</td>
+<td>在派生类中是protected</td>
+<td>在派生类中是private</td>
+</tr>
+<tr>
+<td>基类的protected成员</td>
+<td>在派生类中是protected</td>
+<td>在派生类中是protected</td>
+<td>在派生类中是private</td>
+</tr>
+<tr>
+<td>基类的private成员</td>
+<td>在派生类种不可见</td>
+<td>在派生类种不可见</td>
+<td>在派生类种不可见</td>
+</tr>
+</tbody></table>
+<p>也就是说，用public继承的话，基类的成员会原封不动的继承到派生类。所以我们上面用public继承，那么基类的public成员继承到派生类还是public成员。所以我们可以直接使用父类对象的public成员。</p>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958218.png" alt="在这里插入图片描述"></p>
+<hr>
+<h1 id="基类和派生类之间的转换"><a href="#基类和派生类之间的转换" class="headerlink" title="基类和派生类之间的转换"></a>基类和派生类之间的转换</h1><p>那么我们把子类(派生类) 赋值给 父类(基类)，可以吗？<br>我们用下面这个代码来试试。</p>
+<pre><code class="c">void test2()
+&#123;
+    Person p;
+    Student s;
+    s._name = &quot;李四&quot;;
+    s._num = 2;
+    p = s;
+    cout &lt;&lt; p._name &lt;&lt; endl;
+&#125;
+</code></pre>
+<p>测试结果 :<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958947.png" alt="在这里插入图片描述"><br>子类对象是可以给父类的。那么父类对象可以给子类吗？</p>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958331.png" alt="在这里插入图片描述"><br>答案是不行，但是如果你真的想转，也是可以的。</p>
+<pre><code class="c">//父类传给子类
+void test3()
+&#123;
+    Person p;
+    Student s;
+    Person* pp = &amp;p;
+    Student* ps = (Student*)pp;
+    ps-&gt;_name = &quot;张三&quot;;
+    cout &lt;&lt; ps-&gt;_name &lt;&lt; endl;
+&#125;
+</code></pre>
+<p>但是这有很大的风险，那就是内存越界！因为基类没有派生类的成员。而用派生类的指针去强制指向父类，那么当派生类去访问自己的成员的时候，就会导致内存越界。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958215.png" alt="在这里插入图片描述"></p>
+<p>为什么会这样呢？那是因为在转换的过程会进行切片操作。</p>
+<hr>
+<h1 id="切片"><a href="#切片" class="headerlink" title="切片"></a>切片</h1><p>当基类和派生类对象进行转换时，会发生切片操作。</p>
+<p>基类有一个成员的_name，而派生类Student继承了Person。所以Student有个隐藏的成员_name。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958860.png" alt="在这里插入图片描述"><br>当把Student 赋值给 Person时，会发生切片操作。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958013.png" alt="在这里插入图片描述"></p>
+<p>简单理解就是把 Person 给 Student的成员 赋值给了 Person，而Student自己的成员_num则不会赋过去。</p>
+<p>为什么Person 不能赋值给Student？ 因为Person没有足够的成员给Student，Student自己的成员_num无法被给予。<br>在这里插入图片描述</p>
+<p>为什么指针强制转换就可以呢？<br>因为pp一开始指向Person<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958961.png" alt="在这里插入图片描述"></p>
+<p>而Person 的空间范围是<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958915.png" alt="在这里插入图片描述"></p>
+<p>此时把它强制转换成 Student指针的话，那么它的范围会变成这样。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958843.png" alt="在这里插入图片描述"><br>这就造成了越界访问，所以这是非常危险的操作。</p>
+<hr>
+<h1 id="继承中的作用域"><a href="#继承中的作用域" class="headerlink" title="继承中的作用域"></a>继承中的作用域</h1><p>如果2个类中，有相同的成员名，那么父类的成员会被隐藏。优先使用子类的成员，简单说就是就近原则。</p>
+<p>代码演示:</p>
+<pre><code class="c">class Person
+&#123;
+public:
+    void f() 
+    &#123;
+        cout &lt;&lt; &quot;Person&quot; &lt;&lt; endl;
+    &#125;
+
+    string _name;
+&#125;;
+
+class Student : public Person
+&#123;
+public:
+    void f() //和父类有相同的函数成员
+    &#123;
+        cout &lt;&lt; &quot;Student&quot; &lt;&lt; endl;
+    &#125;
+    int _num;
+&#125;;
+
+void test4()
+&#123;
+    Student s;
+    s.f();
+&#125;
+</code></pre>
+<p>运行结果:<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958579.png" alt="在这里插入图片描述"><br>我们会发现它只调用了自己的成员，如果想调用父类的成员，那么需要::域限定符才能调用父类成员。</p>
+<pre><code class="c">void test4()
+&#123;
+    Student s;
+    s.Person::f();
+&#125;
+</code></pre>
+<p>这样，我们就调用了父类的成员函数<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958056.png" alt="在这里插入图片描述"></p>
+<hr>
+<h1 id="派生类中的默认成员函数"><a href="#派生类中的默认成员函数" class="headerlink" title="派生类中的默认成员函数"></a>派生类中的默认成员函数</h1><blockquote>
+<p>6个默认成员函数，“默认”的意思就是指我们不写，编译器会变我们自动生成一个，那么在派生类中，这几个成员函数是如何生成的呢？ <br><font color = "red" size = "3"><br>1 . 派生类的构造函数必须调用基类的构造函数初始化基类的那一部分成员。如果基类没有默认 的构造函数，则必须在派生类构造函数的初始化列表阶段显示调用。<br><br>2 . 派生类的拷贝构造函数必须调用基类的拷贝构造完成基类的拷贝初始化。 <br><br>3 . 派生类的operator&#x3D;必须要调用基类的operator&#x3D;完成基类的复制。 <br><br>4 . 派生类的析构函数会在被调用完成后自动调用基类的析构函数清理基类成员。因为这样才能保证派生类对象先清理派生类成员再清理基类成员的顺序。 <br><br>5 . 派生类对象初始化先调用基类构造再调派生类构造。 <br><br>6 . 派生类对象析构清理先调用派生类析构再调基类的析构。 <br><br>7 . 因为后续一些场景析构函数需要构成重写，重写的条件之一是函数名相同(这个我们后面会讲解)。那么编译器会对析构函数名进行特殊处理，处理成destrutor()，所以父类析构函数不加virtual的情况下，子类析构函数和父类析构函数构成隐藏关系。</font></p>
+</blockquote>
+<p>接下来我们来测试一下</p>
+<pre><code class="c">class Person
+&#123;
+public:
+    Person()
+    &#123;
+        cout &lt;&lt; &quot;Person&quot; &lt;&lt; endl;
+    &#125;
+
+    Person(const Person&amp; p)
+    &#123;
+        if (&amp;p != this)
+        &#123;
+            _name = p._name;
+        &#125;
+        cout &lt;&lt; &quot;&amp;Person&quot; &lt;&lt; endl;
+    &#125;
+
+    ~Person()
+    &#123;
+        cout &lt;&lt; &quot;~Person&quot; &lt;&lt; endl;
+    &#125;
+
+    string _name;
+&#125;;
+
+class Student : public Person
+&#123;
+public:
+    Student()
+    &#123;
+        cout &lt;&lt; &quot;Student&quot; &lt;&lt; endl;
+    &#125;
+    ~Student()
+    &#123;
+        cout &lt;&lt; &quot;~Student&quot; &lt;&lt; endl;
+    &#125;
+    int _num;
+&#125;;
+
+void test1()
+&#123;
+    Student s;
+&#125;
+
+int main()
+&#123;
+    test1();
+
+&#125;
+</code></pre>
+<p>我们可以发现，它先调用了基类的构造函数，再调用派生类的构造函数。随后派生类先调用析构函数，基类再调用析构函数。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231958509.png" alt="在这里插入图片描述"></p>
+<p>同样的，派生类再调用拷贝构造函数前，必须显示调用基类的拷贝构造函数。</p>
+<pre><code class="c">class Student : public Person
+&#123;
+public:
+    Student()
+    &#123;
+        cout &lt;&lt; &quot;Student&quot; &lt;&lt; endl;
+    &#125;
+
+    Student(const Student&amp; p)
+        :Person(p) //先调用基类的拷贝构造
+    &#123;
+        if (&amp;p != this)
+        &#123;
+            _num = p._num;
+        &#125;
+        cout &lt;&lt; &quot;&amp;Student&quot; &lt;&lt; endl;
+    &#125;
+
+    ~Student()
+    &#123;
+        cout &lt;&lt; &quot;~Student&quot; &lt;&lt; endl;
+    &#125;
+    int _num;
+&#125;;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959372.png" alt="在这里插入图片描述"></p>
+<p>而重写派生类 赋值操作符时，也必须先调用基类的 赋值操作符重写。</p>
+<pre><code class="c">//基类的 =重写函数
+    Person&amp; operator=(const Person&amp; p)
+    &#123;
+        _name = p._name;
+    &#125;
+
+//派生类的=重写函数
+    Student&amp; operator=(const Student&amp; p)
+    &#123;
+        Person::operator=(p); //调用基类的 =赋值重载
+        _num = p._num;
+    &#125;
+</code></pre>
+<p>那么派生类的析构函数是否也要先调用基类的构造函数呢？ 答案是不用！因为栈是一个后进先出的结构。基类先调用构造函数，那么基类就必须后析构。 这样才符合栈先进后出的性质，如果在析构函数里面调用了基类的析构函数，那么基类就会析构俩次。此时如果基类有动态申请的空间。那么程序就会报错，因为一块空间被释放了2次。</p>
+<hr>
+<h1 id="继承中的友元与静态成员"><a href="#继承中的友元与静态成员" class="headerlink" title="继承中的友元与静态成员"></a>继承中的友元与静态成员</h1><h2 id="继承与友元"><a href="#继承与友元" class="headerlink" title="继承与友元"></a>继承与友元</h2><blockquote>
+<p>父类的友元不会继承给子类。通俗来讲，就是你父亲的朋友你不一定认识。如果要父类的友元也是子类的友元，那么需要子类自己去friend一下。</p>
+</blockquote>
+<h2 id="继承中的静态成员"><a href="#继承中的静态成员" class="headerlink" title="继承中的静态成员"></a>继承中的静态成员</h2><blockquote>
+<p>静态成员会被继承，但是不会给它新开空间。通俗的说，子类父类共用同一个静态成员。</p>
+</blockquote>
+<p>我们给父类加一个静态成员 _count，每次调用构造函数就++一次。</p>
+<pre><code class="c">class Person
+&#123;
+public:
+    Person()
+    &#123;
+        ++_count;
+        cout &lt;&lt; &quot;Person&quot; &lt;&lt; endl;
+    &#125;
+
+    Person(const Person&amp; p)
+    &#123;
+        if (&amp;p != this)
+        &#123;
+            _name = p._name;
+        &#125;
+        cout &lt;&lt; &quot;&amp;Person&quot; &lt;&lt; endl;
+    &#125;
+
+    Person&amp; operator=(const Person&amp; p)
+    &#123;
+        _name = p._name;
+    &#125;
+
+    ~Person()
+    &#123;
+        cout &lt;&lt; &quot;~Person&quot; &lt;&lt; endl;
+    &#125;
+    static int _count;
+    string _name;
+&#125;;
+    int Person::_count = 0;
+</code></pre>
+<p>然后我们打印一下子类父类的count值以及count的地址</p>
+<pre><code class="c">void test3()
+&#123;
+    Person p;
+    Student s;
+    cout &lt;&lt; p._count &lt;&lt; &quot;:&quot; &lt;&lt; &amp;p._count &lt;&lt; endl;
+    cout &lt;&lt; s._count &lt;&lt; &quot;:&quot; &lt;&lt; &amp;s._count &lt;&lt; endl;
+&#125;
+</code></pre>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959190.png" alt="在这里插入图片描述"><br>这里我们可以看出，子类会继承父类的 静态成员，并且与父类共用一个静态成员。</p>
+<hr>
+<h1 id="棱形继承和虚继承"><a href="#棱形继承和虚继承" class="headerlink" title="棱形继承和虚继承"></a>棱形继承和虚继承</h1><h2 id="棱形继承"><a href="#棱形继承" class="headerlink" title="棱形继承"></a>棱形继承</h2><p>C++是支持多继承的，而多继承就会面临一个问题，那就是菱形继承。什么是菱形继承呢？ 看一下这张图就知道了。</p>
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959779.png" alt="在这里插入图片描述"></p>
+<p>如图，assistant是助手类，它既可以继承Teacher，也可以继承Student。而Student 和 Teacher 都继承 Person。而这就形成了一个菱形继承，而菱形继承具有很大的冗余性和二义性。</p>
+<p>那么我们也这段代码来测测它的冗余性。</p>
+<pre><code class="c">class Person
+&#123;
+public:
+    Person()
+    &#123;
+        cout &lt;&lt; &quot;Person&quot; &lt;&lt; endl;
+    &#125;
+
+    Person(const Person&amp; p)
+    &#123;
+        if (&amp;p != this)
+        &#123;
+            _name = p._name;
+        &#125;
+        cout &lt;&lt; &quot;&amp;Person&quot; &lt;&lt; endl;
+    &#125;
+
+    Person&amp; operator=(const Person&amp; p)
+    &#123;
+        _name = p._name;
+    &#125;
+
+    ~Person()
+    &#123;
+        cout &lt;&lt; &quot;~Person&quot; &lt;&lt; endl;
+    &#125;
+    string _name;
+&#125;;
+
+class Student : public Person
+&#123;
+public:
+    Student()
+    &#123;
+        cout &lt;&lt; &quot;Student&quot; &lt;&lt; endl;
+    &#125;
+
+    Student(const Student&amp; p)
+        :Person(p) //先调用基类的拷贝构造
+    &#123;
+        if (&amp;p != this)
+        &#123;
+            _num = p._num;
+        &#125;
+        cout &lt;&lt; &quot;&amp;Student&quot; &lt;&lt; endl;
+    &#125;
+
+    Student&amp; operator=(const Student&amp; p)
+    &#123;
+        Person::operator=(p); //调用基类的 =赋值重载
+        _num = p._num;
+    &#125;
+
+    ~Student()
+    &#123;
+        cout &lt;&lt; &quot;~Student&quot; &lt;&lt; endl;
+    &#125;
+    int _num;
+&#125;;
+
+class Teacher : public Person
+&#123;
+public:
+    Teacher()
+    &#123;
+        cout &lt;&lt; &quot;Teacher&quot; &lt;&lt; endl;
+    &#125;
+
+    Teacher(const Teacher&amp; p)
+        :Person(p) //先调用基类的拷贝构造
+    &#123;
+        if (&amp;p != this)
+        &#123;
+            _num = p._num;
+        &#125;
+        cout &lt;&lt; &quot;&amp;Teacher&quot; &lt;&lt; endl;
+    &#125;
+
+    Teacher&amp; operator=(const Teacher&amp; p)
+    &#123;
+        Person::operator=(p); //调用基类的 =赋值重载
+        _num = p._num;
+    &#125;
+
+    ~Teacher()
+    &#123;
+        cout &lt;&lt; &quot;~Teacher&quot; &lt;&lt; endl;
+    &#125;
+    int _num;
+&#125;;
+
+class Assistant : public Teacher,public Student
+&#123;
+public:
+    Assistant()
+    &#123;
+        cout &lt;&lt; &quot;Assistant&quot; &lt;&lt; endl;
+    &#125;
+
+    ~Assistant()
+    &#123;
+        cout &lt;&lt; &quot;~Assistant&quot; &lt;&lt; endl;
+    &#125;
+    int _num;
+&#125;;
+
+void test4()
+&#123;
+    Assistant a;
+&#125;
+
+int main()
+&#123;
+    test4();
+&#125;
+</code></pre>
+<p>我们发现，创建一个对象，Person被调用了2次。如果Person上面有大型数组，那么就会造成数据冗余。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959801.png" alt="在这里插入图片描述"><br>再调用Assistant类的构造函数之前，必须先调用其父类的构造函数。而其继承顺序是先继承Teacher，所以它会先调用Teacher的构造函数。但又因为Teacher又继承了Person，所以Person的构造函数要在Teacher之前调用。所以调用顺序就是 Person-&gt;Teacher-&gt;Person-&gt;Student-&gt;Assistant 。析构顺序则是反过来。</p>
+<BR>
+而棱形继承不仅有冗余性，还有二义性。我们用Assistant对象调用一下_name成员。
+
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959411.png" alt="在这里插入图片描述"><br>我们会发现它提示，_name不明确。那是因为不知道用Teacher的_name还是用Student的_name。所以会出现这种情况。要解决这个问题也很简单，加上域限定符指定即可。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959294.png" alt="在这里插入图片描述"></p>
+<p>即便解决了二义性的问题，但依然存在冗余的情况，所以这种情况我们可以用虚继承。</p>
+<h2 id="虚继承"><a href="#虚继承" class="headerlink" title="虚继承"></a>虚继承</h2><p>虚继承是在”腰”上进行的，也就是在 :后面加上&#x3D;&#x3D;virtual&#x3D;&#x3D;<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959038.png" alt="在这里插入图片描述"><br>Teacher类虚继承Person<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959876.png" alt="在这里插入图片描述"><br>Student类虚继承Person<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959027.png" alt="在这里插入图片描述"><br>然后我们再运行看看<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959638.png" alt="在这里插入图片描述"><br>我们可以看到，二义性解决了，冗余性也得到了改善。Person只会被构造一次。可能看似没什么，但如果我Person 有一个成员变量是 1个大小为100000的数组呢？ 那么构造2次就会产生2个这样的数组，这样就造成了严重的空间浪费。</p>
+<BR>
+那么虚继承在内存中是怎么操作的呢？ 
+首先，我们先写个棱形继承。
+
+<p><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959842.png" alt="在这里插入图片描述"></p>
+<pre><code class="c">
+class A
+&#123;
+public:
+    int _a;
+&#125;;
+
+class B : virtual public A
+&#123;
+public:
+        int _b;
+&#125;;
+
+class C : virtual public A
+&#123;
+public:
+    int _c;
+&#125;;
+
+class D :  public B,  public C
+&#123;
+public:
+    int _d;
+&#125;;
+
+int main()
+&#123;
+    D d;
+    d.B::_a = 1;
+    d.C::_a = 2;
+    d._b = 3;
+    d._c = 4;
+    d._d = 5;
+    d._a = 0;
+    return 0;
+&#125;
+</code></pre>
+<p>然后我们调试，打开内存监测窗口。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959074.png" alt="在这里插入图片描述"><br>然后一步一步调试观察<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232000328.gif" alt="在这里插入图片描述"><br>最后的结果是这样的<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959968.png" alt="在这里插入图片描述"><br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959577.png" alt="在这里插入图片描述"><br>我们发现 B和C的公共成员都存放在最后一行。<br>那么B和C上面的地址是什么呢？我们在内存观测一下<br>48 7b 00 01 ，小端存储的话就是倒过来的，实际地址是 01 00 7b 48<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959071.png" alt="在这里插入图片描述"></p>
+<p>54 7b 00 01  ，小端存储就是 01 00 7b 54<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959922.png" alt="在这里插入图片描述"><br>我们发现第二行全是0，这是给其他东西预留的，我们可以不用管。我们只看第二行。而14是16进制的值，转换为10进制就是20，0c转换成十进制就是12。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231959327.png" alt="在这里插入图片描述"><br>这样我们就可以得出，第二行存放的是到公共成员的偏移量&#x2F;相对距离。而偏移量就是地址处到公共成员的距离。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303232000986.png" alt="在这里插入图片描述"><br>也就是说，在D里面，A放在了一个公共的位置，不属于B也不属于C。而B和C要去找A的时候。会通过 地址处(虚基表) 保存的偏移量，来找到A。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>在java或者其他的一些语言中，是没有多继承的，只有单继承。因为多继承可能是一个缺陷，也很少用到。但这也正是C++的特点，而和继承息息相关的还有多态，多态的难度还要大于继承。所以后面会为大家写一篇关于多态的文章。如果文中有讲的不好的，或者错误的地方。欢迎各位指出。</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    <div id="comment">
+        <div id="twikoo-container"></div>
+    </div>
+    
+    
+</div>
+
+                <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2023 - 2023 小林的博客
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;林  子
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/argvchs/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+            </div>
+            </transition>
+            
+            <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+            </transition>
+            
+        </div>
+        <script src="/js/main.js"></script>
+        
+        
+
+
+
+<script>
+    twikoo.init({
+        el: "#twikoo-container",
+        envId: "",
+        region: "",
+        path: location.pathname,
+        lang: "zh-CN",
+    })
+</script>
+
+
+        
+   
+    <script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"model":{"jsonPath":"live2d-widget-model-haruto"},"display":{"position":"right","width":150,"height":300},"mobile":{"show":false},"log":false,"pluginJsPath":"lib/","pluginModelPath":"assets/","pluginRootPath":"live2dw/","tagMode":false});</script></body>
+</html>
