@@ -3,7 +3,7 @@
 <html lang="ch">
     <head>
         <meta charset="utf-8" />
-        <title>二叉树最近公共祖先 | 小林的博客</title>
+        <title>消失的数字 | 小林的博客</title>
         <meta name="author" content="林  子" />
         <meta name="description" content="烟雨江南中为等你回波一望" />
         <meta name="keywords" content="" />
@@ -181,14 +181,14 @@
             <div id="main" v-show="!loading">
                 <div class="article">
     <div>
-        <h1>二叉树最近公共祖先</h1>
+        <h1>消失的数字</h1>
     </div>
     <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2023/2/20
+            2023/2/17
         </span>
         
         <span class="category">
@@ -208,17 +208,7 @@
             
             <span class="tag">
                 
-                <a href="/tags/leetcode/" style="color: #00bcd4">leetcode</a>
-            </span>
-            
-            <span class="tag">
-                
-                <a href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/" style="color: #00bcd4">二叉树</a>
-            </span>
-            
-            <span class="tag">
-                
-                <a href="/tags/%E9%80%92%E5%BD%92/" style="color: #ff7d73">递归</a>
+                <a href="/tags/leetcode/" style="color: #ffa2c4">leetcode</a>
             </span>
             
         </span>
@@ -226,63 +216,38 @@
     </div>
     
     <div class="content" v-pre>
-        <meta name="referrer" content="no-referrer" />
+        <meta name="referrer" content="no-referrer" />  
 
-<h1 id="找2个节点的最近公共祖先"><a href="#找2个节点的最近公共祖先" class="headerlink" title="找2个节点的最近公共祖先"></a>找2个节点的最近公共祖先</h1><p>难度：中等</p>
-<p>题目:<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231956278.png" alt="在这里插入图片描述"><br>解题思路:用两个栈来保存2个节点的路径。随后会产生一大一小的两个栈，使大的栈和小的栈一样大后，同时pop比较节点地址。<br>我们可以分次查找，第一次找p的地址，第二次找q的地址。而查找的时候，一进去就让数据入栈，随后把该节点看成一棵树，如果这棵树里面没有找到要查找的节点，那么就会pop掉入栈的数据。如果找到了，返回true。<br>假设我们要找 6和7的最近公共父节点。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231956629.png" alt="在这里插入图片描述"><br>第一次查找，先遍历二叉树，去查找6的节点<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231956574.gif" alt="在这里插入图片描述"><br>第二次查找，遍历二叉树，查找7的节点。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231956113.gif" alt="在这里插入图片描述"><br>随后我们得到了stack1和stack2两个栈，那么我们让长度长的那个栈pop，直到pop到两个栈一样大时，再同时pop。<br><img src="https://gitee.com/Lin2C/image/raw/master/image/202303231956565.gif" alt="在这里插入图片描述"><br>2个栈栈顶节点相等时，随便返回一个即可。</p>
-<p>代码:</p>
-<pre><code class="c"> bool FindNode(TreeNode* root,TreeNode* x,stack&lt;TreeNode*&gt;&amp; stack)
-    &#123;
-        //如果root为空，说明没找到，返回flase
-        if(root == nullptr)
-            return false;
-        //节点入栈，保存路径
-        stack.push(root);
 
-        //如果找到了，返回true
-        if(root == x)
-            return true;
-
-        //递归找左子树，如果有返回true的，说明找到了，就返回true，没找到则继续找右子树
-        if(FindNode(root-&gt;left,x,stack))
-            return true;
-        //递归找右子树
-        if(FindNode(root-&gt;right,x,stack))
-            return true;
-        
-        //左右子树都没找到，说明这棵树没有要找的节点，那么pop掉刚开始push进来的根节点
-        stack.pop();
-        return false;
-    &#125;
-
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) &#123;
-        stack&lt;TreeNode*&gt; stack1;
-        stack&lt;TreeNode*&gt; stack2;
-        //找p节点
-        FindNode(root,p,stack1);
-        //找q节点
-        FindNode(root,q,stack2);
-            
-        //使两个栈长度一样
-        while(stack1.size() != stack2.size())
+<h1 id="消失的数字"><a href="#消失的数字" class="headerlink" title="消失的数字"></a>消失的数字</h1><p>难度： 简单</p>
+<p>题目描述：</p>
+<p><strong>数组<code>nums</code>包含从<code>0</code>到<code>n</code>的所有整数，但其中缺了一个。请编写代码找出那个缺失的整数。你有办法在O(n)时间内完成吗？</strong></p>
+<p><strong>示例1</strong></p>
+<blockquote>
+<p>输入：[3,0,1]<br>输出：2</p>
+</blockquote>
+<p><strong>示例2</strong></p>
+<blockquote>
+<p>输入：[9,6,4,2,3,5,7,0,1]<br>输出：8</p>
+</blockquote>
+<p>解题思路：</p>
+<p>两个相同的数字异或的结果是0，而0和任何数异或，都是它本身。所以我们只需要把1-数组的长度和数组的元素依次异或。最后得到的值就是消失的数字。</p>
+<p>假设：有数组 [3,0,1]  </p>
+<p>1 - 数组的长度：1，2，3 </p>
+<p>把这6个数一起异或后，得到2是消失的数字。</p>
+<p>代码：</p>
+<pre><code class="c++">    int missingNumber(vector&lt;int&gt;&amp; nums) &#123;
+        int len = nums.size();
+        int ret = 0;
+        for(int i = 1; i &lt;= len ; i++)
         &#123;
-            if(stack1.size() &gt; stack2.size())
-                stack1.pop();
-            else
-                stack2.pop();
+            //异或
+            ret = ret ^ nums[i-1] ^ i;
         &#125;
-        //到这里两个栈一样大了，那么同时出数据
-        while(stack1.top() != stack2.top())
-        &#123;
-            stack1.pop();
-            stack2.pop();
-        &#125;
-
-        //随便返回一个
-        return stack1.top();
+        return ret;
     &#125;
 </code></pre>
-<p>题目链接:<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/lowest-common-ancestor-of-a-binary-tree/submissions/">二叉树的最近公共祖先</a></p>
+<p>题目链接：<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/missing-number-lcci/submissions/">消失的数字</a></p>
 
     </div>
     
